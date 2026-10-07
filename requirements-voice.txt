@@ -1,0 +1,4 @@
+mlx-whisper>=0.4,<1
+supertonic>=1,<2
+huggingface-hub>=0.30,<2
+soundfile>=0.13,<1

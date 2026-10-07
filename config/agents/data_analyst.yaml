@@ -1,0 +1,25 @@
+{
+  "agent_id": "data_analyst",
+  "name": "Data Analyst",
+  "role": "specialist",
+  "description": "제공된 구조화 자료를 계산 결과와 구분해 해석한다. 계산 도구를 통하지 않은 숫자를 결과로 쓰지 않는다.",
+  "system_prompt_file": "prompts/agents/data_analyst.md",
+  "capabilities": [
+    "attachment_read"
+  ],
+  "tools": [
+    "attachment_read"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "data_analyst",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

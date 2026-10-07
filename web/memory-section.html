@@ -1,0 +1,23 @@
+<section id="page-memory" class="page">
+  <div class="section-heading"><span class="eyebrow">A LITTLE LESS TO REMEMBER</span><h1>기억과 할 일</h1><p>나의 맥락을 기억하고, 맡긴 일은 정해진 시간에 실행해요.</p></div>
+  <div class="two-columns">
+    <article class="panel"><h2>기억해 둘 내용 <span id="memory-count" class="count">0</span></h2><p class="muted">선호하는 답변 방식이나 중요한 맥락을 남겨 주세요.</p><form id="memory-form" class="entry-form"><label class="sr-only" for="memory-input">새 메모</label><textarea id="memory-input" placeholder="예: 답변은 요점부터 짧게 알려줘." maxlength="1000" required></textarea><button class="primary">기억 저장</button></form><div id="memory-list" class="item-list"></div></article>
+    <article class="panel"><h2>나의 할 일 <span id="task-count" class="count">0</span></h2><p class="muted">직접 할 일과 AIRI에게 맡길 예약 작업을 등록하세요.</p>
+      <form id="task-form" class="entry-form">
+        <label class="sr-only" for="task-input">새 할 일</label><input id="task-input" placeholder="예: 회의 자료를 요약해 줘" maxlength="300" required>
+        <div class="task-datetime"><label>실행 날짜<input id="task-date" type="date"></label><label>실행 시간<input id="task-time" type="time"></label></div>
+        <label for="task-action">작업 방식</label><select id="task-action"><option value="manual">직접 할 일 · 체크리스트</option><option value="ai">AIRI가 자동 실행 · 글쓰기 / 요약 / 분석</option><option value="api">등록한 API 자동 실행</option></select>
+        <label id="task-tool-label" for="task-tool" hidden>실행할 API<select id="task-tool"></select></label>
+        <label class="sr-only" for="task-notes">할 일 메모</label><textarea id="task-notes" placeholder="장소나 준비할 내용, 작업의 목적을 적어 주세요." maxlength="2000"></textarea>
+        <label for="task-instructions">작업 지시 또는 참고 파일 내용</label><textarea id="task-instructions" placeholder="구체적인 결과물, 형식, 요약할 내용을 적어 주세요." maxlength="12000" rows="5"></textarea>
+        <label class="upload-button secondary">.md / .txt 지시 파일 첨부<input id="task-file" type="file" accept=".md,.markdown,.txt,text/plain,text/markdown"></label><span id="task-file-name" class="footnote"></span>
+        <div class="form-actions"><button id="task-submit" class="primary">할 일 저장</button><button id="task-cancel" type="button" class="quiet" hidden>수정 취소</button></div>
+      </form>
+      <div id="task-list" class="item-list"></div><p class="footnote">지정 시각은 시작 시각입니다. Mac과 AIRI 서버가 켜져 있어야 실행됩니다. 결과는 작업 카드에 저장됩니다.</p>
+    </article>
+  </div>
+  <article class="panel skill-panel">
+    <div class="skill-heading"><div><h2>나의 스킬 <span id="skill-count" class="count">0</span></h2><p class="muted">Markdown으로 답변 방식과 작업 절차를 가르쳐 주세요.</p></div><label class="upload-button secondary">.md 파일 업로드<input id="skill-file" type="file" accept=".md,.markdown,text/markdown,text/plain"></label></div>
+    <div class="skill-layout"><form id="skill-form" class="entry-form"><label for="skill-name">스킬 이름</label><input id="skill-name" placeholder="예: 나의 이메일 작성 규칙" maxlength="100" required><label for="skill-content">직접 작성하거나 Markdown 파일을 불러오세요</label><textarea id="skill-content" placeholder="# 이메일 작성 규칙&#10;- 상대방이 사용한 언어로 답합니다.&#10;- 요점을 먼저 씁니다.&#10;- 마무리는 짧고 친근하게 합니다." maxlength="12000" rows="12" required></textarea><div class="form-actions"><button id="skill-submit" class="primary">스킬 저장</button><button id="skill-cancel" type="button" class="quiet" hidden>수정 취소</button></div><p class="footnote">최대 12,000자. 켜진 스킬 중 질문에 맞는 최대 3개의 관련 부분을 불러옵니다. 모델 재학습이나 프로그램 실행은 하지 않습니다.</p></form><div id="skill-list"></div></div>
+  </article>
+</section>

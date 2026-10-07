@@ -1,0 +1,25 @@
+{
+  "agent_id": "stock101",
+  "name": "Stock101",
+  "role": "specialist",
+  "description": "기존 Stock101 분석과 기록만 읽는다. 주문 도구는 없으며 모의·실거래 상태를 혼동하지 않는다.",
+  "system_prompt_file": "prompts/agents/stock101.md",
+  "capabilities": [
+    "stock101_read"
+  ],
+  "tools": [
+    "stock101_read"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 60,
+  "memory_namespace": "stock101",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": true,
+  "enabled": true
+}

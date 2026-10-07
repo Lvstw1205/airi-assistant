@@ -1,0 +1,1 @@
+window.AIRIAssets={gestures:{idle:'public-avatar.svg',happy:'public-avatar.svg',focus:'public-avatar.svg'},offices:{office1:{morning:'',afternoon:'',evening:'',night:''}},phase:h=>h<12?'morning':h<18?'afternoon':'evening',gestureURL:()=>'/public-avatar.svg',officeURL:()=>'/public-avatar.svg'};

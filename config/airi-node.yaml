@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "node_id": "AIRI_PRIME",
+  "peer_id": "AIRI_WORKS",
+  "bind": [
+    "127.0.0.1"
+  ],
+  "port": 8740,
+  "peer_addresses": [],
+  "secret_file": "data/node/pair-secret",
+  "state_dir": "data/node",
+  "enabled_agents": [],
+  "stage_b": false,
+  "heartbeat_seconds": 4,
+  "queue_enabled": false,
+  "ledger_path": "data/airi.sqlite3",
+  "redis_secret_file": "data/node/redis-secret"
+}

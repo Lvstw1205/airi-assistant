@@ -1,0 +1,29 @@
+{
+  "agent_id": "research",
+  "name": "Research",
+  "role": "specialist",
+  "description": "조회한 원문과 출처에 한정해 질문에 답한다. 출처 없는 사실은 미확인으로 남긴다.",
+  "system_prompt_file": "prompts/agents/research.md",
+  "capabilities": [
+    "web_search",
+    "web_read",
+    "memories_read"
+  ],
+  "tools": [
+    "web_search",
+    "web_read",
+    "memories_read"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "research",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": true,
+  "enabled": true
+}

@@ -1,0 +1,25 @@
+{
+  "agent_id": "critic",
+  "name": "Critic",
+  "role": "specialist",
+  "description": "출처·시각·계산 결과를 대조하고 누락·오류를 판정한다. 의견을 확인된 사실로 승격하지 않는다.",
+  "system_prompt_file": "prompts/agents/critic.md",
+  "capabilities": [
+    "verify"
+  ],
+  "tools": [
+    "verify"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 60,
+  "memory_namespace": "critic",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

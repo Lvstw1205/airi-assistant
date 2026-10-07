@@ -1,0 +1,27 @@
+{
+  "agent_id": "system_health",
+  "name": "System Health",
+  "role": "specialist",
+  "description": "실제 서비스 상태를 읽는다. 없는 온도 센서·GPU 사용률은 확인 불가로 표시한다.",
+  "system_prompt_file": "prompts/agents/system_health.md",
+  "capabilities": [
+    "system.health",
+    "system.storage"
+  ],
+  "tools": [
+    "system.health",
+    "system.storage"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "works",
+  "priority": 50,
+  "memory_namespace": "system_health",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

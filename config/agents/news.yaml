@@ -1,0 +1,29 @@
+{
+  "agent_id": "news",
+  "name": "News",
+  "role": "specialist",
+  "description": "검색 결과의 제목과 기사 본문을 구분한다. 날짜와 출처를 보존한다. 검색 결과를 사실 검증 완료라고 말하지 않는다.",
+  "system_prompt_file": "prompts/agents/news.md",
+  "capabilities": [
+    "web_search",
+    "web_read",
+    "business_news"
+  ],
+  "tools": [
+    "web_search",
+    "web_read",
+    "business_news"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "news",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

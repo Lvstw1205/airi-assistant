@@ -1,0 +1,26 @@
+.widget-ui .tw-card .dw-link{background:none;border:0;padding:0;cursor:pointer}
+.widget-ui .tw-summary{font-size:11px;margin:0 0 8px;color:var(--text-secondary)}
+.widget-ui .tw-staff-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px 3px}
+.widget-ui .tw-person{appearance:none;border:1px solid transparent;padding:3px 0 4px;border-radius:10px;background:transparent;color:inherit;display:flex;flex-direction:column;align-items:center;min-width:0;cursor:pointer;position:relative}
+.widget-ui .tw-person:hover,.widget-ui .tw-person:focus-visible{background:#c5b8fa15;border-color:#c5b8fa40;outline:none}
+.widget-ui .tw-avatar{width:48px;height:54px;object-fit:contain;display:block}
+.widget-ui .tw-person strong{font-size:10px;font-weight:600;line-height:1.5;white-space:nowrap}
+.widget-ui .tw-person small{font-size:8px;color:var(--text-muted);white-space:nowrap;line-height:1.4}
+.widget-ui .tw-person[data-state=working]{background:#8ed4b112}
+.widget-ui .tw-person[data-state=working] small{color:#a7d8bc}
+.widget-ui .tw-person[data-state=working]:after{content:'';position:absolute;right:6px;top:5px;width:5px;height:5px;border-radius:50%;background:#a7d8bc;animation:tw-work 1.4s ease-in-out infinite}
+.widget-ui .tw-person[data-state=queued] small{color:#dac7a6}
+.widget-ui .tw-person:is([data-state=offline],[data-state=unknown]){opacity:.6}
+.widget-ui .tw-dialog{width:min(650px,calc(100vw - 40px))}
+.widget-ui .tw-detail-body{display:grid;gap:12px}
+.widget-ui .tw-detail-note{font-size:12px;color:var(--text-muted);line-height:1.6;margin:4px 0}
+.widget-ui .tw-detail-person{padding:12px 0;border-top:1px solid var(--border)}
+.widget-ui .tw-detail-heading{display:flex;align-items:center;gap:16px}
+.widget-ui .tw-detail-heading .tw-avatar{width:64px;height:72px;flex:none}
+.widget-ui .tw-detail-heading h3{font-size:15px;margin:0 0 5px}
+.widget-ui .tw-detail-heading p,.widget-ui .tw-detail-person>p{font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.widget-ui .tw-result{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.7 -apple-system,BlinkMacSystemFont,sans-serif;background:#ffffff07;padding:12px;border-radius:10px;max-height:260px;overflow:auto}
+.widget-ui .tw-error{color:#efb3ac}.widget-ui .tw-current,.widget-ui .tw-mission{color:#c9bcf4;font-size:12px}
+@keyframes tw-work{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.widget-ui .tw-person[data-state=working]:after{animation:none}}
+@media(min-width:850px){body[data-widget-density] .tw-avatar{width:36px;height:40px}body[data-widget-density] .tw-staff-grid{gap:1px}body[data-widget-density] .tw-person{padding:1px 0}body[data-widget-density] .tw-summary{font-size:10px;margin-bottom:4px}body[data-widget-density] .tw-card>.dw-fine{font-size:9px!important}}

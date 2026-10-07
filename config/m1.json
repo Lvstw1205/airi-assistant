@@ -1,0 +1,11 @@
+{
+  "profile": "community",
+  "model": "qwen3:4b",
+  "num_ctx": 8192,
+  "num_predict": 700,
+  "keep_alive": "5m",
+  "user_name": "",
+  "user_context": "[]",
+  "avatar_mode": "body",
+  "tts_engine": "system"
+}

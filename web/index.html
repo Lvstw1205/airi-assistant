@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#060e12"><title>AIRI · PERSONAL AI SPACE</title>
+  <script src="./entry.js"></script>
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/redesign.css"><link rel="stylesheet" href="/console.css"><link rel="icon" href="/assets/airi-face.png"><script src="/voice-player.js?v=20260924stable" defer></script><script src="/app.js?v=20261003-widgets2" defer></script><script src="/planner.js" defer></script><script src="/voice.js?v=20260914voice2" defer></script><script src="/workspace.js" defer></script><script src="/mcp.js" defer></script><script src="/console.js" defer></script>
+
+<link rel="stylesheet" href="/camera-motion.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="/"><span class="mascot"><img class="mascot-open" src="/assets/airi-face.png" alt="AIRI 캐릭터"><img class="mascot-blink" src="/assets/airi-face-blink.png" alt="" aria-hidden="true"></span><span>AIRI<small>PERSONAL AI SPACE</small></span></a>
+    <div class="workspace-label">PERSONAL WORKSPACE</div>
+    <nav aria-label="주 메뉴">
+      <button class="nav active" data-page="home"><span>⌂</span>홈</button><button class="nav" data-page="chat"><span>◌</span>대화</button>
+      <button class="nav" data-page="memory"><span>▤</span>기억과 할 일</button>
+      <button class="nav" data-page="automation"><span>⇄</span>자동화 연습 <b id="approval-count" hidden>0</b></button>
+      <button class="nav" data-page="setup"><span>⊞</span>설치·연결</button>
+      <button class="nav" data-page="activity"><span>◷</span>활동 기록</button>
+    </nav>
+    <div class="sidebar-bottom"><span class="mode">M1 연습판</span><p>당신의 하루에,<br>작은 여유를.</p><div class="machine">Mac mini · 16GB<br><span>기록은 이 Mac에 · API 사용 시 전송</span></div></div>
+  </aside>
+  <main>
+    <header class="topbar"><div><span class="breadcrumb">내 작업실</span><span class="slash">/</span><strong id="page-title">홈</strong></div><div class="top-right"><span id="connection" class="connection">연결 확인 중</span><span class="user-avatar">T</span></div></header>
+
+<section id="page-home" class="page home-page active">
+  <div class="home-heading"><div><span class="eyebrow">YOUR DAY, WITH AIRI</span><h1>오늘을 가볍게, User.</h1><p>일정은 한눈에. 맡긴 일은 차근차근.</p></div><span id="home-today" class="date-tag"></span></div>
+  <div class="home-banner"><div><span class="banner-label">나만의 AI 컴패니언</span><h2>생각은 당신이.<br>정리는 AIRI가.</h2><p>자료를 올리고, 할 일을 맡겨보세요.</p><button id="home-new-task" class="primary">새 작업 만들기 <span>＋</span></button></div><div class="banner-companion"><span class="mascot"><img class="mascot-open" src="/assets/airi-face.png" alt="AIRI 캐릭터"><img class="mascot-blink" src="/assets/airi-face-blink.png" alt="" aria-hidden="true"></span><span class="companion-caption">READY WHEN YOU ARE</span></div></div>
+  <div class="stats-grid"><article><span>오늘의 할 일</span><strong id="stat-today">0</strong><small>오늘 일정 중 미완료</small></article><article><span>예약 · 진행 중</span><strong id="stat-scheduled">0</strong><small>전체 대기 및 실행 작업</small></article><article><span>완료한 작업</span><strong id="stat-done">0</strong><small>차곡차곡 쌓이는 결과</small></article><article><span>확인이 필요해요</span><strong id="stat-attention">0</strong><small>승인 · 실패 · 결과 확인</small></article></div>
+  <div class="home-grid">  <aside class="calendar-panel" aria-label="일정 달력">
+    <div class="calendar-heading"><div><span class="eyebrow">YOUR SCHEDULE</span><h2 id="calendar-month"></h2></div><div><button id="calendar-prev" class="quiet" aria-label="이전 달">‹</button><button id="calendar-next" class="quiet" aria-label="다음 달">›</button></div></div>
+    <div class="calendar-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div id="calendar-grid" class="calendar-grid"></div>
+    <div class="calendar-selected"><h3 id="calendar-date"></h3><button id="calendar-today" class="quiet">오늘</button></div><div id="calendar-events"></div><button id="calendar-add" class="secondary">이 날짜에 할 일 추가</button><p class="footnote">기기 현지 시간 기준 · 로컬 일정</p>
+  </aside><aside class="task-overview panel"><div class="overview-heading"><div><span class="eyebrow">TASK ACTIVITY</span><h2>작업 현황</h2></div><button id="home-all-tasks" class="quiet">전체 보기 ↗</button></div><div id="home-task-list"></div><div class="home-storage"><span>MY KNOWLEDGE</span><p id="home-knowledge">기억과 스킬을 함께 쌓아가요.</p></div></aside></div>
+</section>
+    <section id="page-chat" class="page chat-page">
+  <div class="chat-main">
+    <div class="chat-heading"><div class="chat-persona"><span class="mascot"><img class="mascot-open" src="/assets/airi-face.png" alt="AIRI 캐릭터"><img class="mascot-blink" src="/assets/airi-face-blink.png" alt="" aria-hidden="true"></span><div><span class="eyebrow">YOUR LOCAL COMPANION</span><h1>AIRI와 대화</h1><p>한국어 · English · Français. 편하게 이야기해 주세요.</p></div></div><button id="clear-chat" class="quiet">대화 비우기</button></div>
+    <div id="messages" class="messages" role="log" aria-live="polite"></div>
+    <div id="welcome" class="welcome"><div class="chat-companion"><span class="mascot"><img class="mascot-open" src="/assets/airi-face.png" alt="AIRI 캐릭터"><img class="mascot-blink" src="/assets/airi-face-blink.png" alt="" aria-hidden="true"></span></div><h2>어디서부터 시작할까요?</h2><p>저장한 기억과 스킬, 오늘의 일정을 함께 살펴봐요.</p><div class="suggestions"><button data-prompt="오늘 해야 할 일을 확인하고 우선순위를 정리해 줘.">오늘 할 일 정리</button><button data-prompt="내가 저장한 메모를 확인하고 간단히 요약해 줘.">내 기억 돌아보기</button><button data-prompt="What can you help me with today?">Let's talk in English</button></div></div>
+    <div class="composer-wrap">
+      <details class="voice-preferences"><summary>대화 성격 · 목소리 <span id="persona-summary">편한 말투</span></summary><form id="preferences-form"><div class="preference-grid"><label>대화 성격<select id="persona-mode"><option value="free">편한 말투 · 정확한 답변, 가끔 조크</option><option value="calm">차분한 비서 · 정중하고 간결하게</option></select></label><label>음성 엔진<select id="tts-engine"><option value="qwen3_reference">AIRI 참조 음성 · 로컬 복제 (실험)</option><option value="supertonic">Supertonic 3 · 로컬 신경망 음성</option></select></label><label>모든 언어에 사용할 목소리<select id="neural-voice"><option value="F1">여성 1 · F1</option><option value="F2">여성 2 · F2</option><option value="F3">여성 3 · F3</option><option value="F4">여성 4 · F4</option><option value="F5">여성 5 · F5</option><option value="M1">남성 1 · M1</option><option value="M2">남성 2 · M2</option><option value="M3">남성 3 · M3</option><option value="M4">남성 4 · M4</option><option value="M5">남성 5 · M5</option></select></label><label>읽는 속도<select id="tts-speed"><option value="0.85">천천히 · 0.85×</option><option value="1">보통 · 1.0×</option><option value="1.05">자연스럽게 · 1.05×</option><option value="1.2">빠르게 · 1.2×</option></select></label></div><div class="form-actions"><button class="primary">설정 저장</button><button id="voice-preview" type="button" class="secondary">저장하고 미리듣기</button></div><p class="footnote">성격은 대화 말투만 바꿉니다. 목소리는 모두 이 Mac에서 생성됩니다.</p></form></details><div class="wake-controls"><label><input id="always-listen" type="checkbox"> 항상 듣기</label><span>“헤이 아이리 / Hey AIRI”로 불러주세요.</span></div>
+      <div id="chat-status" class="chat-status" role="status"></div>
+      <div class="voice-controls"><button id="microphone" class="secondary" type="button">음성대화 시작</button><button id="end-voice" class="quiet" type="button" hidden>대기 모드</button><label><input id="long-listen" type="checkbox"> 길게 듣기 · 3초 쉬면 전송</label><label><input id="auto-speak" type="checkbox" checked> 답변 읽어주기</label><label><input id="schedule-reminders" type="checkbox" checked> 일정 알림</label><button id="notification-permission" class="quiet" type="button">Mac 알림 켜기</button><span id="voice-state">음성 연결 확인 중</span></div>
+      <form id="chat-form" class="composer"><label class="sr-only" for="message">AIRI에게 메시지</label><textarea id="message" placeholder="AIRI에게 이야기해 주세요… · 최대 12,000자" rows="2" maxlength="12000" required></textarea><div class="composer-bottom"><label class="model-label"><span class="model-dot"></span><select id="model" aria-label="대화 모델"><option>모델 확인 중</option></select></label><div class="send-group"><button type="button" id="stop-speech" class="quiet" title="읽어주기 중지">음성 중지</button><button id="send" class="send" type="submit" aria-label="메시지 보내기">↑</button></div></div></form>
+      <p class="composer-note">항상 듣기는 웹앱을 열어 둔 동안 동작합니다. 최초 마이크 권한 허용이 필요합니다.</p>
+    </div>
+  </div>
+
+</section>
+
+
+    <section id="page-memory" class="page">
+  <div class="section-heading"><span class="eyebrow">A LITTLE LESS TO REMEMBER</span><h1>기억과 할 일</h1><p>나의 맥락을 기억하고, 맡긴 일은 정해진 시간에 실행해요.</p></div>
+  <div class="two-columns">
+    <article class="panel memory-panel"><h2>기억해 둘 내용 <span id="memory-count" class="count">0</span></h2><p class="muted">선호하는 답변 방식이나 중요한 맥락을 남겨 주세요.</p><form id="memory-form" class="entry-form"><label class="sr-only" for="memory-input">새 메모</label><textarea id="memory-input" placeholder="예: 답변은 요점부터 짧게 알려줘." maxlength="1000" required></textarea><button class="primary">기억 저장</button></form><div id="memory-list" class="item-list"></div></article>
+    <article class="panel task-editor"><h2>나의 할 일 <span id="task-count" class="count">0</span></h2><p class="muted">직접 할 일과 AIRI에게 맡길 예약 작업을 등록하세요.</p>
+      <form id="task-form" class="entry-form">
+        <label class="sr-only" for="task-input">새 할 일</label><input id="task-input" placeholder="예: 회의 자료를 요약해 줘" maxlength="300" required>
+        <div class="task-datetime"><label>실행 날짜<input id="task-date" type="date"></label><label>시작 시간<input id="task-time" type="time"></label><label>종료 시간<input id="task-end-time" type="time"></label></div>
+        <p id="task-series-info" class="muted" hidden></p><fieldset class="reminder-editor"><legend>일정 알림 · 여러 개 선택 가능</legend><input id="task-reminders" type="hidden" value="[30,10080]"><div id="task-reminder-options" class="reminder-options"></div><div class="reminder-custom"><label for="reminder-amount">직접 설정</label><input id="reminder-amount" type="number" min="1" max="43200" step="1" placeholder="예: 45"><select id="reminder-unit" aria-label="알림 시간 단위"><option value="1">분 전</option><option value="60">시간 전</option><option value="1440">일 전</option><option value="10080">주 전</option></select><button id="reminder-add" type="button" class="quiet">＋ 추가</button><button id="reminder-clear" type="button" class="quiet">알림 없음</button></div><p class="footnote">최대 12개 · 30일 전까지. 종일 일정은 오전 9시 기준으로 하루 이상 전 알림을 사용합니다.</p></fieldset><label for="task-action">작업 방식</label><select id="task-action"><option value="manual">직접 할 일 · 체크리스트</option><option value="ai">AIRI가 자동 실행 · 글쓰기 / 요약 / 분석</option><option value="api">등록한 API 자동 실행</option></select>
+        <label id="task-tool-label" for="task-tool" hidden>실행할 API<select id="task-tool"></select></label>
+        <label class="sr-only" for="task-notes">할 일 메모</label><textarea id="task-notes" placeholder="장소나 준비할 내용, 작업의 목적을 적어 주세요." maxlength="2000"></textarea>
+        <label for="task-instructions">AIRI에게 맡길 작업 지시</label><textarea id="task-instructions" placeholder="구체적인 결과물, 형식, 요약할 내용을 적어 주세요." maxlength="12000" rows="5"></textarea>
+        <div class="attachment-zone"><label class="upload-button"><strong>＋ 참고 파일 첨부</strong><span>문서, 표, 작업 지시를 한곳에</span><input id="task-file" type="file" multiple accept=".md,.markdown,.txt,.csv,.tsv,.xlsx,.xls,.pdf,.docx,.doc,.rtf,.pptx,.json"></label><p>MD · TXT · CSV · XLSX · XLS · PDF · Word · PPTX<br>파일당 20MB · 작업당 5개</p></div><span id="task-file-name" class="footnote" role="status"></span><div id="task-attachments"></div><p class="footnote">원본은 이 Mac에 저장됩니다. 파일당 텍스트 60,000자까지 읽고, 예약 실행에는 첨부 순서대로 총 12,000자까지 사용합니다. 스캔 PDF는 OCR 후 첨부해 주세요.</p>
+        <div class="form-actions"><button id="task-submit" class="primary">할 일 저장</button><button id="task-cancel" type="button" class="quiet" hidden>수정 취소</button><button id="task-delete" type="button" class="quiet" hidden>일정 삭제</button></div>
+      </form>
+      <button id="task-archive" type="button" class="quiet">지난 작업 · 읽은 결과는 3일 뒤 여기로 정리</button><div id="task-list" class="item-list"></div><p class="footnote">지정 시각은 시작 시각입니다. Mac과 AIRI 서버가 켜져 있어야 실행됩니다. 결과는 작업 카드에 저장됩니다.</p>
+    </article>
+  </div>
+  <article class="panel skill-panel">
+    <div class="skill-heading"><div><h2>나의 스킬 <span id="skill-count" class="count">0</span></h2><p class="muted">Markdown으로 답변 방식과 작업 절차를 가르쳐 주세요.</p></div><label class="upload-button secondary">.md 파일 업로드<input id="skill-file" type="file" accept=".md,.markdown,text/markdown,text/plain"></label></div>
+    <div class="skill-layout"><form id="skill-form" class="entry-form"><label for="skill-name">스킬 이름</label><input id="skill-name" placeholder="예: 나의 이메일 작성 규칙" maxlength="100" required><label for="skill-content">직접 작성하거나 Markdown 파일을 불러오세요</label><textarea id="skill-content" placeholder="# 이메일 작성 규칙&#10;- 상대방이 사용한 언어로 답합니다.&#10;- 요점을 먼저 씁니다.&#10;- 마무리는 짧고 친근하게 합니다." maxlength="12000" rows="12" required></textarea><div class="form-actions"><button id="skill-submit" class="primary">스킬 저장</button><button id="skill-cancel" type="button" class="quiet" hidden>수정 취소</button></div><p class="footnote">최대 12,000자. 켜진 스킬 중 질문에 맞는 최대 3개의 관련 부분을 불러옵니다. 모델 재학습이나 프로그램 실행은 하지 않습니다.</p></form><div id="skill-list"></div></div>
+  </article>
+</section>
+
+
+    <section id="page-automation" class="page"><div class="section-heading"><span class="eyebrow">YOU ARE IN CONTROL</span><h1>자동화, 먼저 연습해요.</h1><p>요청을 만들고, 내용을 확인하고, 승인하면 n8n이 실행합니다.</p></div><article class="practice-panel"><div><span class="mode">실제 n8n 연결</span><h2>첫 번째 워크플로</h2><p>짧은 메시지를 n8n으로 보내고 응답을 받아 봅니다.<br>메일 발송이나 계정 변경 없이 승인 흐름을 익힐 수 있어요.</p></div><form id="practice-form"><label for="practice-input">n8n에 보낼 메시지</label><input id="practice-input" value="안녕 AIRI, 첫 자동화 연습이야!" maxlength="1000" required><button class="primary">승인 요청 만들기</button></form></article><div class="list-heading"><h2>승인과 실행 결과</h2><span>승인 유효 시간 6시간</span></div><div id="approval-list"></div></section>
+
+    <section id="page-setup" class="page"><div class="section-heading"><span class="eyebrow">MADE FOR THIS MAC</span><h1>설치·연결</h1><p>현재 연결 상태와 다음 단계를 한곳에서 확인하세요.</p></div><div class="service-grid"><article class="panel"><div class="service-name"><span class="service-logo">a.</span><h2>AIRI 웹앱</h2><span class="pill good">실행 중</span></div><p>대화·메모·할 일·승인 원장</p><code>127.0.0.1:8765</code><p class="footnote">Python 기본 라이브러리로 실행합니다.</p></article><article class="panel"><div class="service-name"><span class="service-logo">◎</span><h2>Ollama</h2><span id="ollama-state" class="pill">확인 중</span></div><p>컴퓨터 안에서 답변하는 언어 모델</p><a href="https://ollama.com/download/mac" target="_blank" rel="noreferrer">공식 다운로드 ↗</a><p class="footnote">대화 모델에서 선택하면 로컬 추론을 사용합니다.</p></article><article class="panel"><div class="service-name"><span class="service-logo">⇄</span><h2>n8n</h2><span id="n8n-state" class="pill">확인 중</span></div><p>워크플로 실행과 자동화 연습</p><a href="http://127.0.0.1:5678" target="_blank" rel="noreferrer">n8n 편집기 열기 ↗</a><p class="footnote">최초 접속 시 로컬 소유자 계정을 만드세요.</p></article></div><button id="refresh-health" class="secondary">연결 상태 다시 확인</button><article class="panel"><h2>MCP · Canada / US markets</h2><p>환율·주가는 출처와 기준 시각을 함께 확인합니다. Yahoo 시세는 지연될 수 있습니다.</p><div id="mcp-list"></div><details><summary>＋ MCP 추가</summary><form id="mcp-form"><label>이름<input name="name" required maxlength="100"></label><label>연결<select name="transport"><option value="http">Streamable HTTP</option><option value="stdio">Local stdio</option></select></label><label>HTTP endpoint<input name="url" placeholder="https://example.com/mcp"></label><label>Bearer token<input name="token" type="password" autocomplete="new-password"></label><label>Local executable<input name="command" placeholder="/absolute/path/to/python"></label><label>Arguments (JSON)<input name="args" placeholder='["/path/server.py"]'></label><button class="primary">등록</button><p class="footnote">HTTP Bearer 인증 또는 설치된 로컬 서버를 지원합니다. OAuth 로그인은 아직 지원하지 않습니다. 도구 호출은 인자 확인 후 승인합니다.</p></form></details></article><article class="panel setup-guide"><h2>다음에도 이렇게 실행하세요</h2><ol><li>프로젝트 폴더의 <strong>AIRI 시작.command</strong>를 더블클릭하세요.</li><li>Ollama 앱이 실행되어 있는지 확인하세요.</li><li>n8n 편집기에 들어가 로컬 계정을 설정하세요.</li><li><strong>AIRI · 승인 연습</strong> 워크플로가 게시되어 있는지 확인하세요.</li><li>왼쪽 <strong>자동화 연습</strong>에서 요청을 만들고 승인해 보세요.</li></ol><p>이 Mac에서는 로그인 시 백그라운드로 실행됩니다. Mac이 켜져 있고 잠자기 상태가 아니어야 예약 작업을 처리합니다. 자세한 실행·종료 방법은 README.md에 있습니다.</p></article><article class="panel roadmap"><h2>9월 22일 이후 확장할 기능</h2><div><span>대형 모델 실측·교체</span><span>음성 지연 개선·끼어들기</span><span>ARI 캐릭터 에셋</span><span>Gmail·Calendar·Telegram</span><span>화면·카메라 이해</span><span>영상 제작·2노드 운영</span></div><p class="footnote">최종판 구현 목록입니다. 현재 연결되었거나 자동으로 활성화되는 기능은 아닙니다.</p></article><article class="panel api-panel">
+  <div class="skill-heading"><div><h2>API</h2><p class="muted">연결한 서비스를 한눈에 관리하세요.</p></div><button id="api-add" class="primary" type="button">＋ 추가</button></div>
+  <div class="api-workspace">
+    <form id="api-form" hidden class="entry-form">
+      <label for="api-provider">서비스</label><select id="api-provider"><option value="http">기타 HTTP API / n8n</option><option value="weather">WeatherAPI · 날씨 자동 조회</option><option value="openai">OpenAI · 대화 엔진</option></select><p class="footnote">WeatherAPI와 OpenAI는 주소·인증·요청 형식을 자동으로 설정합니다. OpenAI를 대화 모델로 선택하면 대화와 관련 자료가 해당 API로 전송되며 API 요금이 적용됩니다.</p><label for="api-name">도구 이름</label><input id="api-name" placeholder="예: 날씨 조회, n8n 문서 정리" maxlength="100" required>
+      <label for="api-description">이 API로 할 수 있는 일</label><textarea id="api-description" maxlength="500" rows="2" placeholder="예: 전달한 작업 내용을 n8n에서 처리하고 결과를 돌려줍니다."></textarea><label for="api-url">API 주소</label><input id="api-url" type="url" placeholder="https://api.example.com/endpoint" maxlength="2000" required>
+      <label for="api-method">메서드</label><select id="api-method"><option>GET</option><option>POST</option></select>
+      <div class="task-datetime"><label>인증 헤더<input id="api-header" value="Authorization" maxlength="80"></label><label>인증 접두사<input id="api-prefix" value="Bearer " maxlength="40"></label></div>
+      <label for="api-key">API 키 · 필요할 때만 입력</label><input id="api-key" type="password" autocomplete="new-password" placeholder="새 키 입력 · 수정할 때 비우면 기존 키 유지" maxlength="4000">
+      <label for="api-body">POST 요청 본문 · JSON</label><textarea id="api-body" rows="5" maxlength="12000">{}</textarea><p class="footnote">문자열 안의 {{task}}는 예약 작업의 지시 내용으로 바뀝니다.</p>
+      <label class="api-auto"><input id="api-auto" type="checkbox"> 이 도구의 예약 실행을 미리 허용합니다</label><p class="footnote">켜면 예약 시점에 이 요청이 실행됩니다. 끄면 승인 대기로 남습니다. API 키는 이 Mac의 사용자 전용 파일에 보관합니다.</p>
+      <div class="form-actions"><button id="api-submit" class="primary">API 등록</button><button id="api-cancel" type="button" class="quiet">수정 취소</button></div>
+    </form><div id="api-list"></div>
+  </div>
+</article>
+</section>
+
+    <section id="page-activity" class="page"><div class="section-heading"><span class="eyebrow">NOTHING BEHIND THE SCENES</span><h1>활동 기록</h1><p>저장, 도구 조회, 승인 결과가 이 컴퓨터에 남습니다.</p></div><div id="event-list" class="panel"></div></section>
+    <div id="toast" role="status" hidden></div>
+  </main>
+<script src="/character-runtime.js" defer></script>
+<script src="/airi-assets.js?v=20260913a" defer></script>
+<script src="/telegram.js" defer></script>
+<script src="/images.js" defer></script>
+<script src="/spotify.js" defer></script>
+<link rel="stylesheet" href="/companion.css?v=8">
+<link rel="stylesheet" href="/airi-scene.css?v=20260913a">
+<script src="/companion.js?v=20261003-widgets2" defer></script>
+<script src="/gesture-policy.js?v=20260913" defer></script>
+<script src="/airi-scene.js?v=20261003-desk3" defer></script>
+<script src="/nas.js?v=2" defer></script>
+<script src="/stocks.js" defer></script>
+<link rel="stylesheet" href="/liquid-glass.css?v=20260913b">
+<script src="/camera.js" defer></script>
+<link rel="stylesheet" href="/product-camera.css"><script src="/product-camera.js" defer></script>
+<script src="/freellmapi.js" defer></script>
+<script src="/cluster.js" defer></script>
+<script src="/video-production.js" defer></script>
+<script src="/settings-ui.js?v=20260913" defer></script>
+<script src="/camera-motion.js" defer></script><script src="/camera-presence.js" defer></script><script src="/local-workbench.js" defer></script><script src="/stock101/launcher.js" defer></script><a href="/investment.html" style="position:fixed;right:18px;bottom:18px;z-index:9999;background:#102940;color:white;padding:10px 16px;border-radius:10px;text-decoration:none">세계 시장 분석 ↗</a><link rel="stylesheet" href="/tokens.css?v=20261002"><link rel="stylesheet" href="/apple-ui.css?v=20261003-widgets2"><script src="/hold-controller.js" defer></script><script src="/apple-ui.js?v=20261003-widgets2" defer></script><link rel="stylesheet" href="/dashboard-widgets.css?v=20261003"><script src="/dashboard-policy.js?v=20261003" defer></script><script src="/dashboard-widgets.js?v=20261003" defer></script><script src="/expansion-widget.js?v=20261004" defer></script><link rel="stylesheet" href="/studio/widget.css?v=20261004"><script src="/studio/widget.js?v=20261004" defer></script></body>
+</html>

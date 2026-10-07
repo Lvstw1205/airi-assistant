@@ -1,0 +1,79 @@
+/* AIRI 개인용 리디자인 — 개인용 적용본, 2026-10-03.
+   홈과 내부 페이지에 공통 적용되는 디자인 토큰. */
+:root {
+  color-scheme: dark;
+  --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", sans-serif;
+  --font-code: "SF Mono", ui-monospace, monospace;
+  --text-primary: rgba(255,255,255,.92);
+  --text-secondary: rgba(255,255,255,.68);
+  --text-muted: rgba(255,255,255,.58);
+  --text-on-accent: #201d30;
+  --accent: #c5b8fa;
+  --accent-soft: rgba(197,184,250,.14);
+  --status-good: #4ade80;
+  --status-warning: #fb923c;
+  --status-danger: #f87171;
+  --status-idle: #a6a5b0;
+  --glass: rgba(28,20,16,.42);
+  --glass-strong: rgba(28,23,27,.82);
+  --glass-field: rgba(12,12,19,.25);
+  --glass-hover: rgba(255,255,255,.05);
+  --border: rgba(255,255,255,.10);
+  --border-highlight: rgba(255,255,255,.19);
+  --shadow: 0 16px 40px rgba(0,0,0,.30);
+  --highlight: inset 0 1px 0 rgba(255,255,255,.10);
+  --blur-card: 28px;
+  --blur-page: 40px;
+  --glass-saturation: 120%;
+  --radius-card: 22px;
+  --radius-pill: 999px;
+  --radius-input: 12px;
+  --radius-composer: 24px;
+  --type-page: 28px;
+  --type-card: 15px;
+  --type-body: 14px;
+  --type-secondary: 12px;
+  --type-value: 40px;
+  --type-clock: 72px;
+  --weight-title: 600;
+  --rail-width: 72px;
+  --rail-expanded: 220px;
+  --left-column: 340px;
+  --right-column: 420px;
+  --page-max: 1200px;
+  --edge: 24px;
+  --gap: 16px;
+  --composer-height: 68px;
+  --ease: cubic-bezier(.2,.7,.25,1);
+  --duration-popover: 150ms;
+  --duration-page: 200ms;
+  --duration-hover: 200ms;
+  --duration-background: 1500ms;
+  /* 같은 대상은 홈·시장·달력 어디서나 같은 색을 쓴다. */
+  --source-cbc: #f58a90;
+  --source-reuters: #fbb271;
+  --source-ap: #a6bafa;
+  --source-global: #8ad7c2;
+  --source-yonhap: #8eb9f5;
+  --source-geeknews: #b9a4f9;
+  --source-hn: #fcb181;
+  --source-latent: #d1b4da;
+  --calendar-personal: #c5b8fa;
+  --calendar-study: #8bcfbd;
+  --calendar-work: #e7b67e;
+  --holding-o: #c5b8fa;
+  --holding-ry: #8bcfbd;
+  --holding-vfv: #e7b67e;
+}
+[data-phase="night"] {
+  --glass: rgba(23,24,40,.57);
+  --glass-strong: rgba(22,23,38,.88);
+}
+[data-phase="morning"], [data-phase="day"] {
+  --glass: rgba(32,25,21,.55);
+  --glass-strong: rgba(34,27,24,.89);
+}
+[data-phase="evening"] {
+  --glass: rgba(44,27,22,.53);
+  --glass-strong: rgba(43,28,25,.88);
+}

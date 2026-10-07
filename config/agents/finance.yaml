@@ -1,0 +1,27 @@
+{
+  "agent_id": "finance",
+  "name": "Finance",
+  "role": "specialist",
+  "description": "시각과 출처가 있는 금융 관측값을 정리한다. 사실·해석·가정을 구분하고 가격이나 수익을 예언하지 않는다.",
+  "system_prompt_file": "prompts/agents/finance.md",
+  "capabilities": [
+    "market_quote",
+    "market_fundamentals"
+  ],
+  "tools": [
+    "market_quote",
+    "market_fundamentals"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 60,
+  "memory_namespace": "finance",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": true,
+  "enabled": true
+}

@@ -1,0 +1,28 @@
+/* Office and desk never inherit character animation or opacity. */
+.airi-pack.companion-shell .office-scene{background:none;filter:none;opacity:1;transition:none;z-index:0;pointer-events:none}
+.airi-pack .office-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transition:opacity .8s ease;pointer-events:none}
+.airi-pack .office-image.is-active{opacity:1}
+.airi-pack .office-foreground{position:absolute;inset:0;z-index:2;pointer-events:none;clip-path:inset(var(--desk-edge,80.5%) 0 0)}
+.airi-pack .airi-pack-stage{position:absolute;left:46.5%;bottom:14.5%;width:43%;height:72%;transform:translateX(-50%);z-index:1;pointer-events:none;contain:layout style;isolation:isolate}
+.airi-pack[data-office=office1] .airi-pack-stage{bottom:26%;height:67%}
+.airi-pack .airi-pack-body{position:absolute;inset:0;transform-origin:50% 100%;animation:airi-pack-breathe 6s ease-in-out infinite}
+.airi-pack .airi-gesture{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center bottom;opacity:0;transition:opacity .16s ease;pointer-events:none}
+.airi-pack .airi-gesture.is-active{opacity:1}
+.spotify-device-controls{display:flex;align-items:center;gap:8px;margin-top:8px;min-width:0}.spotify-device-controls select{min-width:0;flex:1;width:0;font-size:11px;padding:5px 8px}.spotify-device-controls button{flex:none;font-size:11px}
+.voice-output-status{color:#fff;font-size:12px;padding:5px 12px;text-shadow:0 1px 3px #000;background:#202638c9;border-radius:10px;margin-bottom:5px}
+.airi-pack .face-stage{visibility:hidden;pointer-events:none}
+.airi-pack .console-header,.airi-pack .console-grid{z-index:3;position:relative}
+.airi-pack .console-grid{pointer-events:none}
+.airi-pack .console-grid .context-card,.airi-pack #console-composer,.airi-pack .quick-actions{pointer-events:auto}
+.airi-pack .console-center{overflow:visible}
+.airi-pack-stage[data-intensity=low] .airi-pack-body{animation-name:airi-pack-breathe-low}
+@keyframes airi-pack-breathe{0%,100%{transform:translate3d(0,0,0) rotate(-.08deg) scale(1.002)}50%{transform:translate3d(1px,-2px,0) rotate(.08deg) scale(1.004)}}
+@keyframes airi-pack-breathe-low{0%,100%{transform:translate3d(0,0,0) scale(1.002)}50%{transform:translate3d(0,-1px,0) scale(1.003)}}
+@media(max-width:760px){.airi-pack .airi-pack-stage{left:15%;width:85%;height:65%;bottom:23%}.airi-pack[data-office=office1] .airi-pack-stage{height:62%;bottom:26%}}
+@media(prefers-reduced-motion:reduce){.airi-pack .airi-pack-body{animation:none}.airi-pack .airi-gesture,.airi-pack .office-image{transition:none}}
+
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}.asset-choice{display:grid;gap:6px;text-align:center}.asset-choice img{width:100%;height:110px;object-fit:contain}.asset-gallery{margin:18px 0}
+
+.public-avatar-stage{position:absolute;inset:10% 12% 10%;display:flex;align-items:center;justify-content:center;pointer-events:none}.public-avatar-stage img{height:85%;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 18px 35px #6366f133)}
+
+.companion-shell .office-scene{background-image:radial-gradient(ellipse at 50% 42%,#34315a 0%,#1b1e2d 45%,#11131b 100%)!important}

@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AIRI investment report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "report_id",
+    "snapshot_id",
+    "mode",
+    "generated_at",
+    "as_of",
+    "display_timezone",
+    "coverage",
+    "data_quality",
+    "summary",
+    "market_rows",
+    "analysis",
+    "scenarios",
+    "watch_items",
+    "limitations",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.0"
+    },
+    "report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "live",
+        "fixture"
+      ]
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "display_timezone": {
+      "type": "string"
+    },
+    "coverage": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "data_quality": {
+      "enum": [
+        "fresh",
+        "delayed",
+        "stale",
+        "missing",
+        "conflicting",
+        "mixed"
+      ]
+    },
+    "summary": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "market_rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "instrument_id",
+          "value",
+          "currency",
+          "unit",
+          "observed_at",
+          "quality_status",
+          "evidence_ids"
+        ],
+        "properties": {
+          "instrument_id": {
+            "type": "string"
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": "string"
+          },
+          "change": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "change_unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "change_basis": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "quality_status": {
+            "enum": [
+              "fresh",
+              "delayed",
+              "stale",
+              "missing",
+              "conflicting",
+              "unsupported"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "analysis": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      }
+    },
+    "scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "case",
+          "horizon",
+          "assumptions",
+          "effects",
+          "invalidation_conditions"
+        ],
+        "properties": {
+          "case": {
+            "enum": [
+              "bull",
+              "base",
+              "bear"
+            ]
+          },
+          "horizon": {
+            "type": "string"
+          },
+          "assumptions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "effects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/claim"
+            }
+          },
+          "invalidation_conditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "watch_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "event",
+          "window",
+          "evidence_ids"
+        ],
+        "properties": {
+          "event": {
+            "type": "string"
+          },
+          "window": {
+            "type": "string"
+          },
+          "scheduled_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "provider",
+          "source_url",
+          "retrieved_at",
+          "description",
+          "quality_status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "observation",
+              "calculation",
+              "filing",
+              "announcement",
+              "news"
+            ]
+          },
+          "provider": {
+            "type": "string"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri"
+          },
+          "retrieved_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string"
+          },
+          "quality_status": {
+            "type": "string"
+          },
+          "input_evidence_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "method": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "unit": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "editorial": {
+      "type": "object",
+      "required": [
+        "version",
+        "sections",
+        "checks",
+        "audit"
+      ],
+      "properties": {
+        "version": {
+          "const": "cad-reader/1.0"
+        },
+        "sections": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7
+        },
+        "checks": {
+          "type": "object"
+        },
+        "audit": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": [
+        "text",
+        "kind",
+        "evidence_ids",
+        "confidence",
+        "counter_evidence",
+        "missing_data"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "calculation",
+            "inference",
+            "scenario"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "moderate",
+            "low",
+            "insufficient"
+          ]
+        },
+        "counter_evidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "missing_data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

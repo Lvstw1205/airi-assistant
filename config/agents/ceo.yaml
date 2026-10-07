@@ -1,0 +1,25 @@
+{
+  "agent_id": "ceo",
+  "name": "AIRI CEO",
+  "role": "orchestrator",
+  "description": "검증된 부서 결과를 종합한다. 작업을 실제 수행하지 않았으면 완료라고 말하지 않는다. 기존 AIRI 말투를 유지한다.",
+  "system_prompt_file": "prompts/agents/ceo.md",
+  "capabilities": [
+    "synthesize"
+  ],
+  "tools": [
+    "synthesize"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "ceo",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

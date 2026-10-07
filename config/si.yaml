@@ -1,0 +1,29 @@
+{
+  "enabled": false,
+  "schema_version": 1,
+  "max_skill_bytes": 15000,
+  "proposal_window_days": 14,
+  "proposal_min_repeats": 3,
+  "trusted_successes": 5,
+  "demote_consecutive_failures": 2,
+  "minimum_evaluation_days": 14,
+  "deep_think_candidates": 3,
+  "prepared_context_ttl_hours": 24,
+  "index_batch_limit": 1000,
+  "recall_result_limit": 5,
+  "vector_search_enabled": false,
+  "folder_allowlist": [],
+  "gmail_enabled": false,
+  "night_start": "01:00",
+  "night_end": "06:00",
+  "timezone": "UTC",
+  "tier2_validated": false,
+  "background_enabled": false,
+  "protected_files": [
+    "soul.md",
+    "identity.md",
+    "user.md",
+    "PermissionGate",
+    "server.py"
+  ]
+}

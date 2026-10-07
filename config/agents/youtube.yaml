@@ -1,0 +1,27 @@
+{
+  "agent_id": "youtube",
+  "name": "YouTube",
+  "role": "specialist",
+  "description": "사용자가 제공한 영상 설명·공개 자막 자료만 정리한다. 영상 시청·게시를 하지 않았다면 했다고 말하지 않는다.",
+  "system_prompt_file": "prompts/agents/youtube.md",
+  "capabilities": [
+    "attachment_read",
+    "web_read"
+  ],
+  "tools": [
+    "attachment_read",
+    "web_read"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "youtube",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

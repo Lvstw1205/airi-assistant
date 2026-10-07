@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "daily_brief": false,
+  "timezone": "UTC",
+  "quote_polling": false
+}

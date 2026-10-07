@@ -1,0 +1,26 @@
+[
+  {
+    "file": "Galmuri11.woff2",
+    "source": "https://raw.githubusercontent.com/quiple/galmuri/71e1cacf1437a11220307120e63e30bc275312d4/dist/Galmuri11.woff2",
+    "sha256": "8bad9322b3340bfb5cb26cb00f4752bf4c8e7d1b526bb07205f4af458eebed31",
+    "bytes": 505400
+  },
+  {
+    "file": "Galmuri-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/quiple/galmuri/71e1cacf1437a11220307120e63e30bc275312d4/dist/LICENSE.txt",
+    "sha256": "86a3ee9495f942f0243f18c103da9faca27adb88142613edb8bb852e56c892c1",
+    "bytes": 4360
+  },
+  {
+    "file": "PretendardVariable.woff2",
+    "source": "https://raw.githubusercontent.com/orioncactus/pretendard/7aeb0698819be2b4097dae8ec8fe6a795e5cf3ae/packages/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
+    "sha256": "9599f12fd42fc0bce1cd50b47a0c022e108d7aa64dd0d1bb0ed44f3282d900b4",
+    "bytes": 2057688
+  },
+  {
+    "file": "Pretendard-LICENSE.txt",
+    "source": "https://raw.githubusercontent.com/orioncactus/pretendard/7aeb0698819be2b4097dae8ec8fe6a795e5cf3ae/LICENSE",
+    "sha256": "82e9c8a4b203261f10ddba1296422d64914ff3d4b7bd8a12896d03f0f088d70a",
+    "bytes": 4816
+  }
+]

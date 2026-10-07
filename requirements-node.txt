@@ -1,0 +1,2 @@
+zeroconf>=0.140,<1
+psutil>=6,<8

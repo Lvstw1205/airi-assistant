@@ -1,0 +1,12 @@
+{
+  "model": "qwen3:4b",
+  "language": "en",
+  "max_articles": 12,
+  "max_events": 4,
+  "article_chars": 14000,
+  "context_days": 30,
+  "enrich_events": 2,
+  "deadline_seconds": 840,
+  "interests": [],
+  "delivery_style": "concise"
+}

@@ -1,0 +1,2 @@
+.camera-motion canvas { display:block; width:100%; max-width:640px; height:auto; margin-top:12px; border-radius:12px; }
+.camera-motion canvas[hidden] { display:none; }

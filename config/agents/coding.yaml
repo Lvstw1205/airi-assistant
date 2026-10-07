@@ -1,0 +1,27 @@
+{
+  "agent_id": "coding",
+  "name": "Coding",
+  "role": "specialist",
+  "description": "제공된 코드의 근거를 인용해 설명·수정안을 작성한다. 코드를 실행하거나 테스트했다고 꾸미지 않는다.",
+  "system_prompt_file": "prompts/agents/coding.md",
+  "capabilities": [
+    "attachment_read",
+    "local_work_catalog"
+  ],
+  "tools": [
+    "attachment_read",
+    "local_work_catalog"
+  ],
+  "allowed_models": [
+    "FAST",
+    "REASONING"
+  ],
+  "preferred_node": "prime",
+  "priority": 50,
+  "memory_namespace": "coding",
+  "max_context_tokens": 8192,
+  "timeout_seconds": 120,
+  "approval_ceiling": "READ_ONLY",
+  "critic_required": false,
+  "enabled": true
+}

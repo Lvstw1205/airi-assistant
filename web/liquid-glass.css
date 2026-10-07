@@ -1,0 +1,92 @@
+/* Material only: no scene-wide filters, displacement or animated blur.
+   Prefixes keep this independent of the legacy dashboard stylesheet cascade. */
+body:has(.companion-shell){--airi-glass-edge:rgba(255,255,255,.55);--airi-glass-shadow:0 16px 36px #10152824,inset 0 1px 1px #ffffffd9,inset 0 -1px 1px #ffffff38}
+body .companion-shell .companion-rail{
+ background:linear-gradient(145deg,#202638a8,#141c2b80 60%,#20293b9c);
+ border-right:1px solid #ffffff30;box-shadow:inset -1px 0 #ffffff12,8px 0 32px #0e132021;
+ -webkit-backdrop-filter:blur(24px) saturate(135%);backdrop-filter:blur(24px) saturate(135%);
+}
+body .companion-shell .rail-link{border:1px solid transparent;transition:background .18s,box-shadow .18s}
+body .companion-shell .rail-link.selected{background:linear-gradient(125deg,#b8caff65,#8da4ff26);color:#fff;border-color:#c6d5ff6b;box-shadow:inset 0 1px #ffffff70,inset 3px 0 #d1deff,0 5px 20px #0c163d24}
+body .companion-shell .rail-link:hover{background-color:#ffffff16}
+body .companion-shell .context-card{
+ background:linear-gradient(135deg,#ffffffab,#f4f7ff70 55%,#e6edfa80);border:1px solid var(--airi-glass-edge);border-radius:24px;
+ box-shadow:var(--airi-glass-shadow);-webkit-backdrop-filter:blur(22px) saturate(135%);backdrop-filter:blur(22px) saturate(135%);
+ color:#18243c;
+}
+body .companion-shell .context-card :is(h2,h3,strong){color:#18243c}
+body .companion-shell .context-card :is(p,small,time,.mini-weekdays,.mini-day,.watch-row span){color:#394860}
+body .companion-shell .context-card .mini-day.today{color:#fff;background:#5269ce;box-shadow:inset 0 1px #ffffff73,0 3px 9px #293f8b30}
+body .companion-shell .context-card .context-empty{color:#46536a!important}
+body .companion-shell .context-card .quiet{color:#344ca4!important;border-radius:9px}
+body .companion-shell .context-card :is(.agenda-item,.watch-row){border-top-color:#38456524}
+body .companion-shell .composer-wrap{
+ background:linear-gradient(130deg,#31394bbb,#24304691)!important;border:1px solid #ffffff55!important;border-radius:30px!important;
+ box-shadow:0 16px 38px #090f2929,inset 0 1px #ffffff6b,inset 0 -1px #ffffff18!important;
+ -webkit-backdrop-filter:blur(22px) saturate(140%);backdrop-filter:blur(22px) saturate(140%);
+}
+body .companion-shell .composer-wrap:focus-within{border-color:#d3deffaa!important;box-shadow:0 0 0 3px #bacaff22,0 16px 38px #090f2929,inset 0 1px #ffffff8c!important}
+body .companion-shell .quick-action{border-radius:18px;border-color:#ffffff50;background:linear-gradient(145deg,#58647c8f,#2c374d70);box-shadow:0 7px 20px #0e142820,inset 0 1px #ffffff66;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff}
+body .companion-shell .quick-action:hover{background:#7286ac88;border-color:#ffffff9e}
+body .companion-shell :is(.status-chip,.power-button){background:linear-gradient(135deg,#303c548f,#202b4166);border-color:#ffffff3d;box-shadow:inset 0 1px #ffffff33;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#f3f6ff}
+body .console-drawer{background:linear-gradient(130deg,#162331eb,#17263bdb);border:1px solid #ffffff45;border-radius:26px;box-shadow:0 28px 90px #030c2866,inset 0 1px #ffffff4d;-webkit-backdrop-filter:blur(24px) saturate(125%);backdrop-filter:blur(24px) saturate(125%)}
+body .console-drawer::backdrop{background:#07122455;backdrop-filter:none}
+body .console-drawer .drawer-head{background:#172639f5;border-color:#ffffff24}
+body .console-drawer :is(.panel,.practice-panel,.entry-form,.approval,.item,.event,.skill-card){background:#ffffff08!important;border-color:#ffffff24!important;border-radius:16px;box-shadow:inset 0 1px #ffffff0d!important}
+body .console-drawer :is(input,textarea,select){border-color:#ffffff35!important;border-radius:10px}
+body :is(.rail-link,.quick-action,.asset-choice,.music-play,.mini-day):focus-visible{outline:2px solid #adc6ff;outline-offset:3px}
+/* Strong surfaces for users who request contrast/transparency reduction. */
+@media(prefers-reduced-transparency:reduce),(prefers-contrast:more){
+ body .companion-shell .context-card{background:#f0f3fa;backdrop-filter:none;-webkit-backdrop-filter:none}
+ body .companion-shell :is(.companion-rail,.quick-action,.status-chip,.power-button),body .console-drawer{background:#202c40;backdrop-filter:none;-webkit-backdrop-filter:none}
+ body .companion-shell .composer-wrap{background:#202c40!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){body .companion-shell .context-card{background:#eff3fa}body .companion-shell .composer-wrap{background:#263349!important}}
+/* Web approximation of Liquid Glass, including settings and connection forms. */
+body .console-drawer{color:#edf2ff;background:linear-gradient(135deg,#26334bed,#15243be6);max-width:min(1080px,calc(100vw - 32px))}
+body .console-drawer .drawer-head{background:#25334bd9;padding:18px 24px}
+body #page-setup .section-heading{margin:4px 0 20px;padding:0}
+body #page-setup .section-heading h1{font-size:28px;letter-spacing:-.6px;margin:5px 0 8px;color:#fff}
+body #page-setup .section-heading .eyebrow{display:none}
+body .settings-toolbar{display:grid;gap:14px;margin-bottom:22px}
+body .settings-toolbar input{width:100%;padding:13px 16px;background:#101c3099;color:#fff}
+body .settings-tabs{display:flex;gap:5px;padding:5px;background:#0e182b66;border:1px solid #ffffff24;border-radius:16px}
+body .settings-tab{flex:1;min-height:42px;padding:9px 12px;border:1px solid transparent;border-radius:12px;background:transparent;color:#c5d1e8;white-space:nowrap}
+body .settings-tab[aria-selected=true]{background:linear-gradient(130deg,#c2d4ff38,#9baed71a);border-color:#ffffff47;box-shadow:inset 0 1px #ffffff52,0 3px 10px #0002;color:#fff}
+body .settings-group{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+body .settings-group[hidden],body .settings-group > [hidden],body .settings-empty[hidden]{display:none!important}
+body .settings-group > *{min-width:0;margin:0!important}
+body .settings-group > :is(.service-grid,.api-panel,.telegram-panel,details){grid-column:1/-1}
+body .settings-group .panel{padding:22px;background:linear-gradient(145deg,#ffffff13,#ffffff06)!important;border:1px solid #ffffff30!important;border-radius:20px!important;box-shadow:inset 0 1px #ffffff30,0 8px 24px #00000012!important}
+body .settings-group :is(h2,h3){color:#f4f6ff;font-size:18px;margin:0 0 12px}
+body .settings-group :is(p,.muted,.footnote,small){color:#c6d2e6;line-height:1.65;overflow-wrap:anywhere}
+body .settings-group :is(label,input,select,textarea,button){font-size:14px}
+body .settings-group label{color:#dde6f6;line-height:1.5;margin:12px 0 7px}
+body .settings-group label:has(input[type=checkbox]){display:flex;align-items:center;gap:10px}
+body .settings-group input[type=checkbox]{width:18px;height:18px;flex:none;margin:0;accent-color:#a9bfff}
+body .settings-group :is(input:not([type=checkbox]),select,textarea){max-width:100%;min-height:42px;background:#0b172b80!important;color:#f3f6ff!important;padding:10px 12px;border:1px solid #ffffff30!important}
+body .settings-group select option{color:#eef3ff;background:#202d43}
+body .settings-group button{min-height:38px;border-radius:10px}
+body .settings-group :is(button,input,select,textarea,a):focus-visible{outline:2px solid #b8d3ff;outline-offset:3px}
+body .settings-group .primary{background:linear-gradient(135deg,#d3ddff,#a9bded);color:#17253f;border-color:#e4ecff}
+body .settings-group details{padding:14px;border:1px solid #ffffff24;border-radius:14px;background:#ffffff05}
+body .settings-group summary{cursor:pointer;color:#e3ebfa;line-height:1.5}
+body .settings-group .api-workspace{display:block}
+body .settings-group #api-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+body .settings-group #api-list .item{margin:0;padding:16px}
+body .settings-group #api-form{margin-bottom:20px}
+body .homepod-help{margin-top:16px!important}
+body .research-sources{display:flex;flex-direction:column;gap:7px;margin-top:14px;padding:14px;border:1px solid #adc2ec45;border-radius:14px;background:#a6c2ff0d}
+body .research-sources a{color:#afceff;overflow-wrap:anywhere}
+body .companion-shell .music-widget .homepod-open{font-size:12px;min-height:28px;padding:3px 8px;background:transparent;color:#344ca4;border:0}
+@media(max-width:760px){body .settings-group{grid-template-columns:1fr}body .settings-group #api-list{grid-template-columns:1fr}body .settings-tabs{overflow-x:auto}body .settings-tab{padding:8px;font-size:13px}body .settings-group .panel{padding:16px}}
+@media(prefers-reduced-transparency:reduce){body .console-drawer{background:#202e44}body .settings-group .panel{background:#26354c!important}}
+body:has(.companion-shell) .console-drawer{padding:0;background:linear-gradient(130deg,#30445bdc,#17273bdb);border:1px solid #ffffff59;box-shadow:inset 0 1px #ffffff66,0 24px 90px #09142666;backdrop-filter:blur(28px) saturate(150%);-webkit-backdrop-filter:blur(28px) saturate(150%)}
+body .console-drawer #drawer-body{padding:22px 26px}
+body #page-setup .voice-preferences form{max-height:none;overflow:visible;padding:4px 12px 12px}
+body #page-setup .voice-preferences summary{color:#edf2ff}
+body .settings-group #api-list .skill-card{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:16px;margin:0}
+body .settings-group #api-list .form-actions{flex-wrap:wrap;justify-content:flex-start;gap:6px}
+body .settings-group #api-list .api-url{overflow-wrap:anywhere;white-space:normal}
+body .settings-toolbar input{background:#132338a6!important;color:#fff}
+@media(prefers-reduced-transparency:reduce){body:has(.companion-shell) .console-drawer{background:#25354a;backdrop-filter:none;-webkit-backdrop-filter:none}}

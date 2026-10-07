@@ -1,0 +1,15 @@
+<article class="panel api-panel">
+  <div class="skill-heading"><div><h2>나의 API 도구</h2><p class="muted">필요한 서비스를 등록하고 예약 작업에 연결하세요.</p></div><span class="mode">키는 화면·AI에 다시 노출하지 않습니다</span></div>
+  <div class="skill-layout">
+    <form id="api-form" class="entry-form">
+      <label for="api-name">도구 이름</label><input id="api-name" placeholder="예: 날씨 조회, n8n 문서 정리" maxlength="100" required>
+      <label for="api-url">API 주소</label><input id="api-url" type="url" placeholder="https://api.example.com/endpoint" maxlength="2000" required>
+      <label for="api-method">메서드</label><select id="api-method"><option>GET</option><option>POST</option></select>
+      <div class="task-datetime"><label>인증 헤더<input id="api-header" value="Authorization" maxlength="80"></label><label>인증 접두사<input id="api-prefix" value="Bearer " maxlength="40"></label></div>
+      <label for="api-key">API 키 · 필요할 때만 입력</label><input id="api-key" type="password" autocomplete="new-password" placeholder="새 키 입력 · 수정할 때 비우면 기존 키 유지" maxlength="4000">
+      <label for="api-body">POST 요청 본문 · JSON</label><textarea id="api-body" rows="5" maxlength="12000">{}</textarea><p class="footnote">문자열 안의 {{task}}는 예약 작업의 지시 내용으로 바뀝니다.</p>
+      <label class="api-auto"><input id="api-auto" type="checkbox"> 이 도구의 예약 실행을 미리 허용합니다</label><p class="footnote">켜면 예약 시점에 이 요청이 실행됩니다. 끄면 승인 대기로 남습니다. API 키는 이 Mac의 사용자 전용 파일에 보관합니다.</p>
+      <div class="form-actions"><button id="api-submit" class="primary">API 등록</button><button id="api-cancel" type="button" class="quiet" hidden>수정 취소</button></div>
+    </form><div id="api-list"></div>
+  </div>
+</article>

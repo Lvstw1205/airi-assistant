@@ -1,0 +1,10 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>AIRI · Research Desk</title><link rel="stylesheet" href="/research-desk/style.css"><script src="/research-desk/app.js" defer></script></head><body>
+<header><a href="/" class="brand">AIRI <span>/ TIM WORKS</span></a><span class="eyebrow">RESEARCH DESK</span><a href="/">홈으로</a></header>
+<main><section class="intro"><p class="eyebrow">EVIDENCE BEFORE OPINION</p><h1>숫자로 증명하는 관점.</h1><p>자료와 논지를 먼저 확인하고, 승인한 계획으로 영어 리서치를 작성해.</p></section>
+<div class="layout"><aside><form id="create"><h2>새 리서치</h2><label>분석할 질문<textarea id="topic" required maxlength="2000" placeholder="예: 캐나다 금리 하락이 은행의 이익과 밸류에이션에 주는 영향"></textarea></label>
+<label>보고서 유형<select id="type"><option>Spot Comment</option><option>Sector Deep Dive</option><option>Monthly Strategy Outlook</option><option>Fixed Income Outlook</option><option>Event Preview</option></select></label>
+<label>분석 분야<select id="focus"><option value="macro">Macro / 시장 전략</option><option value="company">Sector / Company</option><option value="fixed_income">Fixed Income</option><option value="event">Event Preview</option></select></label>
+<label>분석 기준일<input id="asof" type="date" required></label><label>기업 / 정확한 티커 (선택)<input id="company" maxlength="120" placeholder="NVDA, RY.TO …"></label>
+<label>공식 원문 URL (선택 · 한 줄에 하나)<textarea id="sources" placeholder="https://…"></textarea></label><details><summary>NAS 원자료 첨부</summary><p class="hint">Investment 폴더의 원자료를 선택해. 발행일을 확인해서 입력해야 기준일 이후 정보가 섞이지 않아.</p><div id="files"></div></details>
+<button type="submit" class="primary">자료 조사 · 논지 만들기</button><p class="hint">1·2단계 후 승인 대기. 심층 보고서는 두 섹션씩 이어 쓰기.</p></form><section><h2>리서치 기록</h2><nav id="history" aria-label="리서치 기록"></nav></section></aside>
+<article id="detail" aria-live="polite"><div class="empty"><h2>어떤 판단이 필요한지 알려줘.</h2><p>시세 요약보다 구체적인 질문이 좋아.<br>예: “매출은 늘었는데 왜 현금흐름은 줄었는가?”</p></div></article></div></main><p id="message" role="status"></p></body></html>

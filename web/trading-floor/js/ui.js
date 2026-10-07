@@ -1,0 +1,61 @@
+import {collect,fixture} from './data.js';import {STAFF} from './brain.js';import {Bus,runDemo} from './engine.js';import {drawChart} from './chart.js';import {stage} from './stage.js';import * as paper from './paper.js';
+const $=id=>document.getElementById(id),bus=new Bus();stage(bus);let token=null,busy=false,abort=null,snapshot=null,result=null,runId=null,logs=[],filter='all',selected='taro',activeRun=null,lastSequence=0,historyRows=[],grades=[];
+let storage;try{storage=window.localStorage;}catch{storage={getItem:()=>null,setItem:()=>{throw Error('storage unavailable');}};}
+let account=paper.load(storage);const number=n=>Number.isFinite(n)?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';
+function notify(text,warning=false){$('notice').textContent=text;$('notice').classList.toggle('warning',warning);}
+async function api(path,body){const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:{'X-AIRI-Token':token||'','Content-Type':'application/json'},body:body?JSON.stringify(body):undefined});const data=await r.json();if(!r.ok)throw Error(data.error||`HTTP ${r.status}`);return data;}
+function accountUI() {const s=paper.stats(account);$('balance').textContent=number(s.balance);$('pnl').textContent=number(s.pnl);$('wins').textContent=(s.wins===null?'—':number(s.wins)+'%')+' / '+s.trades;$('mdd').textContent=number(s.mdd)+'%';$('positions').textContent=s.positions;drawSparkline();if(!paper.save(account,storage))notify('브라우저 저장소를 사용할 수 없어. 이번 모의 계좌는 이 화면을 닫으면 사라져.',true);}
+function drawSparkline(){const canvas=$('sparkline'),ctx=canvas.getContext('2d'),values=account.curve.slice(-90);ctx.clearRect(0,0,180,44);if(!values.length)return;const low=Math.min(...values),high=Math.max(...values),spread=high-low||1;ctx.strokeStyle='#8dd6b2';ctx.lineWidth=1.5;ctx.beginPath();values.forEach((v,i)=>{const x=3+(values.length===1?0:i/(values.length-1))*174,y=high===low?22:40-(v-low)/spread*36;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});if(values.length===1)ctx.lineTo(177,22);ctx.stroke();}
+function gradeUI(id){const g=grades.find(x=>x.run_id===id),labels={TARGET_FIRST:'목표 먼저 도달',STOP_FIRST:'손절 먼저 도달',NO_HIT:'24시간 내 미도달',AMBIGUOUS:'봉 안의 선후 미확인',UNKNOWN:'자료 미확인',PENDING:'24시간 경과 전',NOT_APPLICABLE:'HOLD · 방향 성적 없음'};$('grade-note').textContent=g?(labels[g.state]||g.state)+(g.reason?' · '+g.reason:''):'24시간 뒤 실제 자료가 확보되면 채점해. 아직 검증 결과는 없어.';}
+async function refreshHistory(){if(!token)return;const data=await api('pixel/status');historyRows=data.runs||[];grades=data.grades||[];const chosen=$('history').value;$('history').replaceChildren();const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='실제 분석 기록 선택';$('history').append(placeholder);for(const run of historyRows){const o=document.createElement('option');o.value=run.id;o.textContent=run.symbol+' · '+new Date(run.created*1000).toLocaleString('ko-KR')+' · '+run.state;$('history').append(o);}$('history').value=chosen;if(runId)gradeUI(runId);return data;}
+$('history').onchange=async()=>{const id=$('history').value;if(!id||busy)return;lastSequence=0;result=null;logs=[];renderLogs();try{await readEvents(id,true);gradeUI(id);notify('저장된 분석 기록이야. 과거 결과를 새 모의 주문으로 넣지 않아.');}catch(e){notify(e.message,true);}};
+function showSnapshot(s){snapshot=s;$('market-symbol').textContent=s.symbol.replace('USDT',' / USDT');$('price').textContent=number(s.price);$('change').textContent=(s.change>=0?'+':'')+number(s.change)+'% / 24h';$('venue').textContent=s.venue;$('asof').textContent=new Date(s.asOf).toLocaleString('ko-KR');drawChart($('chart'),snapshot,result?.plan);
+ $('source-list').replaceChildren();for(const source of s.sources||[]){try{const url=new URL(source);if(url.protocol!=='https:')continue;const a=document.createElement('a');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=url.host+url.pathname;$('source-list').append(a);}catch{}}
+}
+function planUI(plan){$('side').textContent=plan.side==='LONG'?'BUY / PAPER':plan.side==='SHORT'?'SELL / PAPER':'HOLD';$('side').style.color=plan.side==='SHORT'?'#f58b99':plan.side==='LONG'?'#95e8b8':'#e7cb8b';$('score').textContent=`${plan.confidence??0}/100 · ${plan.scoreLabel||'규칙 점수'} · 증거금 ${(plan.size||0)*100}%`;$('levels').textContent=plan.entry?`ENTRY ${number(plan.entry)} · TP ${number(plan.tp)} · SL ${number(plan.sl)}\nLIQ ≈ ${number(plan.liq)} · R:R ${number(plan.rr)} · GUARD ${plan.guard?'PASS':'HOLD'}`:plan.reason;drawChart($('chart'),snapshot,plan);}
+function renderLogs(){const list=logs.filter(e=>filter==='all'||filter==='debate'&&['bull','bear'].includes(e.id)||filter==='agent'&&e.id===selected);$('logs').replaceChildren();for(const e of list){const div=document.createElement('div');div.className='log';const b=document.createElement('b');b.textContent=`${(e.id||'SYSTEM').toUpperCase()} · ${e.demo?'RULES / 시연':e.node||'LOCAL'}${e.fallback?' · 규칙 대체':''}`;const text=document.createElement('span');text.textContent=e.text;div.append(b,text);$('logs').append(div);}$('logs').scrollTop=$('logs').scrollHeight;}
+bus.subscribe(e=>{if(e.type==='run_start'){runId=e.run_id;logs=[];renderLogs();$('run-state').textContent=e.demo?'DEMO':'RUNNING';}
+ if(e.type==='market_snapshot')showSnapshot(e.snapshot);
+ if(e.type==='agent_say'){logs.push(e);logs=logs.slice(-100);renderLogs();}
+ if(e.type==='verdict')planUI(e);
+ if(e.type==='run_end'){result=e.result;if(result?.snapshot)showSnapshot(result.snapshot);if(result?.plan){planUI(result.plan);if(!e.replay)paper.open(account,result.plan,result.snapshot,runId);accountUI();}$('run-state').textContent='COMPLETE';$('download').disabled=false;}
+ if(e.type==='run_failed'){$('run-state').textContent='STOPPED';notify(e.error||'분석이 중단됐어.',true);}
+});
+function setBusy(value){busy=value;$('history').disabled=value;$('analyze').disabled=value;$('sample').disabled=value;$('cancel').hidden=!value;for(const id of ['symbol','engine','mode','lev'])$(id).disabled=value;}
+async function readEvents(id,replay=false){const data=await api(`pixel/events?id=${encodeURIComponent(id)}&after=${lastSequence}`);for(const e of data.events||[]){if(e.sequence<=lastSequence)continue;lastSequence=e.sequence;bus.emit(e.type,{...e,replay});}return data;}
+async function watch(id){
+  let streamAvailable=location.port==='8765';
+  while(activeRun===id&&!abort?.signal.aborted){
+    if(streamAvailable){
+      try{
+        const response=await fetch(`/api/pixel/stream?id=${encodeURIComponent(id)}&after=${lastSequence}`,{headers:{'X-AIRI-Token':token},signal:abort?.signal});
+        if(!response.ok||!response.body)throw Error('SSE unavailable');
+        const reader=response.body.getReader(),decoder=new TextDecoder();let buffer='';let done=false;
+        while(!done){const part=await reader.read();if(part.done)break;buffer+=decoder.decode(part.value,{stream:true});let split;
+          while((split=buffer.indexOf('\n\n'))>=0){const packet=buffer.slice(0,split);buffer=buffer.slice(split+2);const line=packet.split('\n').find(l=>l.startsWith('data: '));if(!line)continue;const e=JSON.parse(line.slice(6));if(e.sequence<=lastSequence)continue;lastSequence=e.sequence;bus.emit(e.type,e);if(['run_end','run_failed'].includes(e.type)){done=true;break;}}}
+        if(done){await reader.cancel();return;}
+      }catch(e){if(abort?.signal.aborted)return;streamAvailable=false;}
+    }else{const status=await readEvents(id);if(!['QUEUED','RUNNING'].includes(status.state))return;await new Promise(resolve=>setTimeout(resolve,2000));}
+  }
+}
+async function run(sample=false){if(busy)return;setBusy(true);result=null;$('download').disabled=true;abort=new AbortController();
+ try{const options={lev:Number($('lev').value),mode:$('mode').value};
+  if($('engine').value==='local'&&!sample){if(!token)throw Error('실제 AIRI에서 열어야 로컬 AI를 사용할 수 있어.');const request=await api('pixel/analyze',{symbol:$('symbol').value,...options,request_key:crypto.randomUUID()});activeRun=request.id;lastSequence=0;notify('실제 분석을 접수했어. M1의 초안과 M6 검수 결과가 도착하는 순서대로 표시해.');await watch(activeRun);}
+  else{notify(sample?'샘플 데이터 · AI 없는 연출 시연 · 모의 계좌에 반영하지 않아.':'공개 시세를 수집하고 있어.');const s=sample?fixture():token?(await api('pixel/snapshot?symbol='+encodeURIComponent($('symbol').value))).snapshot:await collect($('symbol').value);showSnapshot(s);notify(`${sample?'SAMPLE':s.venue} · 규칙 기반 시연 / AI 없음${s.errors.length?' · 일부 데이터 미확인 '+s.errors.length+'건':''}`,!!s.errors.length);result=await runDemo(s,{...options,pace:sample?.18:.35,bus,signal:abort.signal});}
+ }catch(e){bus.emit('run_failed',{error:e.message});}finally{activeRun=null;abort=null;setBusy(false);if(token)refreshHistory().catch(()=>{});}}
+$('controls').onsubmit=e=>{e.preventDefault();run();};$('sample').onclick=()=>run(true);$('cancel').onclick=async()=>{abort?.abort();if(activeRun){try{await api('pixel/cancel',{id:activeRun});notify('중단 요청을 보냈어. 진행 중인 단일 모델 호출이 끝나면 멈춰.');}catch(e){notify(e.message,true);}}};
+for(const button of document.querySelectorAll('[data-filter]'))button.onclick=()=>{filter=button.dataset.filter;for(const b of document.querySelectorAll('[data-filter]'))b.classList.toggle('selected',b===button);$('agent-filter').hidden=filter!=='agent';renderLogs();};
+for(const person of STAFF){const option=document.createElement('option');option.value=person.id;option.textContent=person.name+' · '+person.role;$('agent-filter').append(option);}$('agent-filter').onchange=()=>{selected=$('agent-filter').value;renderLogs();};document.addEventListener('select-agent',e=>{selected=e.detail;$('agent-filter').value=selected;document.querySelector('[data-filter="agent"]').click();});
+$('reset').onclick=()=>{if(!confirm('이 픽셀 작업실의 모의 계좌만 10,000 USDT로 초기화할까?'))return;account=paper.fresh();accountUI();};
+$('download').onclick=()=>{if(!result)return;const text=`# AIRI Pixel Trading Floor\n\n${new Date(snapshot.asOf).toISOString()} · ${snapshot.symbol} · ${snapshot.venue}\n\n${logs.map(e=>`## ${e.id.toUpperCase()} (${e.node||'RULES'})\n${e.text}`).join('\n\n')}\n\n## 모의 판정\n\`\`\`json\n${JSON.stringify(result.plan,null,2)}\n\`\`\`\n\n## 출처\n${snapshot.sources.join('\n')}\n\n실거래 없음. 점수는 확률이 아님.\n`;const url=URL.createObjectURL(new Blob([text],{type:'text/markdown;charset=utf-8'})),a=document.createElement('a');a.href=url;a.download=`AIRI_Pixel_${snapshot.symbol}_${new Date().toISOString().slice(0,10)}.md`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+function clocks(){for(const [id,zone,label]of [['nyc','America/New_York','NYC'],['ldn','Europe/London','LDN'],['sel','Asia/Seoul','SEL']])$(id).textContent=label+' '+new Intl.DateTimeFormat('en-GB',{timeZone:zone,hour:'2-digit',minute:'2-digit'}).format(new Date());}clocks();setInterval(clocks,10000);
+new ResizeObserver(()=>drawChart($('chart'),snapshot,result?.plan)).observe($('chart'));
+setInterval(()=>{if($('auto').checked&&!document.hidden&&!busy)run();},90000);
+let marking=false;setInterval(async()=>{if(marking||document.hidden||busy||!account.positions.length)return;marking=true;try{for(const sym of new Set(account.positions.map(p=>p.symbol))){const s=token?(await api('pixel/snapshot?symbol='+sym)).snapshot:await collect(sym);paper.mark(account,s);}accountUI();}catch(e){notify('모의 계좌 시세 갱신 지연: '+e.message,true);}finally{marking=false;}},60000);
+accountUI();drawChart($('chart'));(async()=>{try{
+ if(!['8765','18767'].includes(location.port))throw Error('Standalone demo');
+ const response=await fetch('/api/bootstrap');if(!response.ok)throw Error();token=(await response.json()).token;
+ const status=await refreshHistory();$('connection').textContent=`AIRI 연결 · ${status.worker_connected?'M1 작업자 연결':'M1 확인 필요'}`;
+ if(status.active){notify('진행 중인 분석의 실제 기록을 다시 연결했어.');setBusy(true);activeRun=status.active.id;lastSequence=0;abort=new AbortController();try{const restored=await readEvents(activeRun,true);if(['QUEUED','RUNNING'].includes(restored.state))await watch(activeRun);}finally{activeRun=null;abort=null;setBusy(false);}}
+ else if(status.runs?.length){const last=status.runs.find(x=>x.state==='COMPLETE');if(last){$('history').value=last.id;lastSequence=0;await readEvents(last.id,true);gradeUI(last.id);notify('최근 완료된 분석 기록이야. 새 시세 분석은 ANALYZE를 눌러줘.');}}
+ }catch{$('connection').textContent='독립 데모 · AI 연결 없음';$('engine').querySelector('[value="local"]').disabled=true;}})();

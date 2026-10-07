@@ -1,0 +1,19 @@
+<section id="page-chat" class="page active chat-page">
+  <div class="chat-main">
+    <div class="chat-heading"><div><span class="eyebrow">YOUR LOCAL COMPANION</span><h1>반가워요, User.</h1><p>한국어 · English · Français. 편하게 이야기해 주세요.</p></div><button id="clear-chat" class="quiet">대화 비우기</button></div>
+    <div id="messages" class="messages" role="log" aria-live="polite"></div>
+    <div id="welcome" class="welcome"><div class="companion" aria-hidden="true"><span class="eye left"></span><span class="eye right"></span><span class="mouth"></span></div><h2>어디서부터 시작할까요?</h2><p>저장한 기억과 스킬, 오늘의 일정을 함께 살펴봐요.</p><div class="suggestions"><button data-prompt="오늘 해야 할 일을 확인하고 우선순위를 정리해 줘.">오늘 할 일 정리</button><button data-prompt="내가 저장한 메모를 확인하고 간단히 요약해 줘.">내 기억 돌아보기</button><button data-prompt="What can you help me with today?">Let's talk in English</button></div></div>
+    <div class="composer-wrap">
+      <div class="wake-controls"><label><input id="always-listen" type="checkbox"> 항상 듣기</label><span>“헤이 아이리 / Hey AIRI”로 불러주세요.</span></div>
+      <div id="chat-status" class="chat-status" role="status"></div>
+      <div class="voice-controls"><button id="microphone" class="secondary" type="button">음성대화 시작</button><button id="end-voice" class="quiet" type="button" hidden>대기 모드</button><span class="language-label">한국어 · English · Français 자동 인식</span><label><input id="auto-speak" type="checkbox" checked> 답변 읽어주기</label><span id="voice-state">음성 연결 확인 중</span></div>
+      <form id="chat-form" class="composer"><label class="sr-only" for="message">AIRI에게 메시지</label><textarea id="message" placeholder="AIRI에게 이야기해 주세요…" rows="2" maxlength="4000" required></textarea><div class="composer-bottom"><label class="model-label"><span class="model-dot"></span><select id="model" aria-label="대화 모델"><option>모델 확인 중</option></select></label><div class="send-group"><button type="button" id="stop-speech" class="quiet" title="읽어주기 중지">음성 중지</button><button id="send" class="send" type="submit" aria-label="메시지 보내기">↑</button></div></div></form>
+      <p class="composer-note">항상 듣기는 웹앱을 열어 둔 동안 동작합니다. 최초 마이크 권한 허용이 필요합니다.</p>
+    </div>
+  </div>
+  <aside class="calendar-panel" aria-label="일정 달력">
+    <div class="calendar-heading"><div><span class="eyebrow">YOUR SCHEDULE</span><h2 id="calendar-month"></h2></div><div><button id="calendar-prev" class="quiet" aria-label="이전 달">‹</button><button id="calendar-next" class="quiet" aria-label="다음 달">›</button></div></div>
+    <div class="calendar-weekdays" aria-hidden="true"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div><div id="calendar-grid" class="calendar-grid"></div>
+    <div class="calendar-selected"><h3 id="calendar-date"></h3><button id="calendar-today" class="quiet">오늘</button></div><div id="calendar-events"></div><button id="calendar-add" class="secondary">이 날짜에 할 일 추가</button><p class="footnote">기기 현지 시간 기준 · 로컬 일정</p>
+  </aside>
+</section>
