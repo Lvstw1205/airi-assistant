@@ -44,6 +44,7 @@ import sys
 import automation
 import attachments
 import llm_client
+import devices
 import workspace_context
 import providers
 import speech_text
@@ -94,7 +95,8 @@ def hardware_profile():
         values = subprocess.check_output(['/usr/sbin/sysctl', '-n', 'machdep.cpu.brand_string', 'hw.memsize'], text=True, timeout=3).splitlines()
         return values[0].replace('Apple ', '') + ' · ' + str(round(int(values[1]) / 1024**3)) + 'GB'
     except (OSError, ValueError, subprocess.SubprocessError, IndexError):
-        return 'Local Mac'
+        import platform
+        return platform.system()+' · '+platform.machine()
 
 
 @contextlib.contextmanager
@@ -448,6 +450,7 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/worker-office/result':
             identifier=urllib.parse.parse_qs(urlsplit(self.path).query).get('id',[''])[0]
             return self.send_json(worker_office.service(sys.modules[__name__]).result(identifier))
+        if path == '/api/devices':return self.send_json(devices.registry(DATA).status(settings()['model']))
         if path == '/api/cluster':return self.send_json(mac_cluster.status(sys.modules[__name__]))
         if path == '/api/companion/status':
             return self.send_json({'node':hardware_profile(),'standby':os.environ.get('AIRI_STANDBY')=='1','checked_at':now(),'mac1':{'id':'mac1','connected':True,'role':'primary','capabilities':['chat','voice','tasks','files']},'mac2':mac_cluster.status(sys.modules[__name__]),'spotify':spotify_oauth.refresh(sys.modules[__name__]),
@@ -534,7 +537,8 @@ class Handler(BaseHTTPRequestHandler):
         if path == '/api/health':
             models, error, n8n = [], '', False
             try:
-                models = fetch(OLLAMA + '/api/tags')['models']
+                models = devices.available_models(sys.modules[__name__])
+                if not models:error='설치된 Ollama 모델을 찾지 못했습니다. 연결된 기기에 모델을 설치하세요.'
             except Exception:
                 error = 'Ollama가 연결되지 않았습니다. Ollama 앱을 실행해 주세요.'
             try:
@@ -565,6 +569,7 @@ class Handler(BaseHTTPRequestHandler):
             assets['/'+name]=(name,'text/javascript; charset=utf-8')
         assets['/apple-prototype.html']=('apple-prototype.html','text/html; charset=utf-8')
         assets['/companion.css']=('companion.css','text/css; charset=utf-8')
+        assets['/devices.css']=('devices.css','text/css; charset=utf-8')
         assets['/liquid-glass.css']=('liquid-glass.css','text/css; charset=utf-8')
         assets['/assets/airi/motions/manifest.json']=('assets/airi/motions/manifest.json','application/json')
         for name in ('focus','happy','hardworking','sleepy','stretch','stretch2'):
@@ -674,6 +679,7 @@ class Handler(BaseHTTPRequestHandler):
             if body.get('action')=='review':return self.send_json(video_production.review(sys.modules[__name__],body))
             return self.send_json(video_production.submit(sys.modules[__name__],body))
         if path == '/api/worker-office':return self.send_json(worker_office.action(sys.modules[__name__],body))
+        if path == '/api/devices':return self.send_json(devices.action(sys.modules[__name__],body))
         if path == '/api/cluster':
             if body.get('action')=='save':return self.send_json(mac_cluster.save(sys.modules[__name__],body))
             if body.get('action')=='test':return self.send_json(mac_cluster.test(sys.modules[__name__]))
@@ -829,7 +835,7 @@ class Handler(BaseHTTPRequestHandler):
             elif model.startswith('openai:'):
                 choices={'openai:'+t['id'] for t in automation.public_tools(sys.modules[__name__]) if t['provider']=='openai' and t['has_key']}
                 if not choices or model not in choices|{'openai:auto'}:raise ValueError('키가 등록된 OpenAI API를 선택하세요.')
-            elif model not in [m['name'] for m in fetch(OLLAMA + '/api/tags')['models']]:
+            elif model not in [m['name'] for m in devices.available_models(sys.modules[__name__])]:
                 raise ValueError('설치된 모델을 선택하세요.')
             with db() as c:
                 c.execute('INSERT OR REPLACE INTO settings VALUES(?,?)', ('model', json.dumps(model)))
@@ -1289,12 +1295,13 @@ def main():
     def reload_departments(*_):
         try:departments.registry.reload();event('agents','부서 설정을 다시 읽었어.')
         except (OSError,ValueError):event('agents','새 부서 설정이 유효하지 않아 기존 설정을 유지했어.')
-    signal.signal(signal.SIGHUP,reload_departments)
+    if hasattr(signal,'SIGHUP'):signal.signal(signal.SIGHUP,reload_departments)
     server = ThreadingHTTPServer(('127.0.0.1', PORT), Handler)
     server.daemon_threads = True
     server.token = token
     # During migration, verify the new host without running duplicate jobs/bot polls.
     if os.environ.get('AIRI_STANDBY') != '1':
+        devices.registry(DATA).start()
         import local_workbench
         local_workbench.service(sys.modules[__name__]).ensure()
         worker_office.service(sys.modules[__name__])

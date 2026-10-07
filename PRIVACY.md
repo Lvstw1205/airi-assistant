@@ -16,3 +16,8 @@ frame to loopback Ollama only when requested. Do not attach vectors or private i
 Stop the app before backing up or deleting its data. Backups you create may retain deleted
 information. There is no hosted telemetry or analytics service configured by this release.
 Dependencies and optional providers have their own privacy policies.
+
+## Optional paired inference devices
+
+Explicitly registered computers receive the prompts/context needed for inference over pinned TLS.
+Pairing codes and local worker identities stay under ignored data directories. See [DEVICES.md](docs/DEVICES.md).

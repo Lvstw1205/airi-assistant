@@ -13,7 +13,7 @@
  const statusNames={ready:'연결됨',loading:'확인 중',stale:'갱신 중',offline:'연결 끊김',unavailable:'조회 불가',setup_required:'측정 프로그램 미설치'};
  const pressureNames={nominal:'정상',fair:'약간 높음',serious:'높음',critical:'매우 높음',unknown:'측정 불가'};
  function card(title,id){const c=make('article','wu-card dw-card'),h=make('header','wu-card-head'),content=make('div','dw-content');h.append(make('h2','',title));c.append(h,content);return {c,h,content,id};}
- const mac=card('내 Mac','mac-status'),stock=card('Stock101','stock101');
+ const mac=card('내 기기','mac-status'),stock=card('Stock101','stock101');
  let metrics=null,trading=null,macError='',stockError='',tradeBusy=false,macFlight=null,stockFlight=null,disposed=false,dialog=null;
  function detailsLink(mode){const a=make('a','dw-link','상세보기 ↗');a.href='/stock101'+(mode?'#'+mode:'');a.target='_blank';a.rel='noopener';a.setAttribute('aria-label',mode==='live'?'실제매매 상세보기':mode==='overview'?'모의매매 상세보기':'Stock101 상세보기');return a;}
  mac.h.append(button('새로고침',()=>loadMac(true),'dw-refresh'));
@@ -32,8 +32,16 @@
   if(d.node==='M1'){const w=metrics?.worker;box.append(fine(!w?'작업자 확인 중':w.stale?'작업자 상태 재확인 중':!w.connected?'작업자 연결 끊김':w.active_job?.node?'실행 중 · '+w.active_job.purpose:'작업자 연결됨 · 현재 대기'));}
   return box;
  }
- function renderMac(){mac.content.replaceChildren();for(const name of ['M6','M1'])mac.content.append(macNode(metrics?.nodes?.find(n=>n.node===name)||{node:name,state:macError?'unavailable':'loading',stale:true}));
-  const foot=make('div','dw-foot');foot.append(fine(macError||'10초마다 갱신 · 온도는 센서 평균'),button('작업실 ↗',()=>window.open('/worker-office.html','_blank','noopener')),button('측정 기준',()=>{const d=newDialog('Mac 측정 기준');d.append(fine(metrics?.source_note||'전체 코어 CPU 평균, GPU 드라이버 사용률과 통합 메모리를 표시해. 측정할 수 없는 값은 —로 표시해.'),fine('화면에 위젯이 보일 때만 갱신해. 연결이 끊기면 지난 측정값임을 표시하고 0으로 바꾸지 않아.'));}));mac.content.append(foot);}
+ function renderMac(){
+  mac.content.replaceChildren();
+  for(const d of metrics?.devices||[]){
+   const box=make('section','dw-mac-node'),head=make('div','dw-node-head');
+   head.append(make('h3','',d.name),make('span','dw-badge',d.main?'AI 메인':!d.enabled?'사용 안 함':d.online?'연결됨':'오프라인'));
+   box.append(head,fine(d.hardware?`${d.hardware.system} · RAM ${d.hardware.memory_gb} GB · CPU ${d.hardware.cpu_count}개`:'연결을 확인하면 기기 정보가 표시됩니다.'),fine(d.online?`응답 ${d.latency_ms} ms · 설치 모델 ${d.models.length}개`:'Ollama와 기기 실행 상태를 확인하세요.'));mac.content.append(box);
+  }
+  if(!metrics?.devices?.length)mac.content.append(fine(macError||'기기 확인 중…'));
+  const foot=make('div','dw-foot');foot.append(fine(macError||'메인 자동 선택 · 등록한 기기만 표시'),button('기기 추가 / 관리',()=>{window.AIRISettings?.open('devices');document.getElementById('device-connections')?.scrollIntoView({block:'start'});}));mac.content.append(foot);
+ }
  const reasons={USER_STOP:'직접 중지됨',STARTUP_CONFIRMATION_REQUIRED:'시작 확인 필요',STARTUP_RECONCILIATION_REQUIRED:'재시작 후 확인 중',STOP_AND_RECONCILE_LIVE_FIRST:'실제매매 중지·주문 확인 필요',LOSS_LIMIT:'손실 한도 도달',RISK_CALCULATION_FAILED:'위험 계산 확인 필요',LIVE_REQUIREMENTS_NOT_MET:'실제매매 설정·잔액 확인 필요',LOCAL_LIVE_CONFIRMATION_REQUIRED:'실제 자금 사용 확인 필요'};
  function reason(text){return reasons[text]||(text?'상세보기에서 상태 확인':'');}
  function renderStock(){
@@ -51,7 +59,7 @@
   const info=make('div','dw-foot');info.append(fine(stockError||'10초마다 상태 확인 · 평가는 표시 시각 기준'),button('새로고침',()=>loadStock(true),'dw-refresh'));stock.content.append(info);
  }
  async function request(path){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),12000);try{const r=await fetch('/api/'+path,{headers:{'X-AIRI-Token':token},signal:ctrl.signal});const data=await r.json();if(!r.ok)throw Error(data.error||'연결 확인 필요');return data;}finally{clearTimeout(timer);}}
- async function loadMac(force=false){if(macFlight)return macFlight;if(!token||disposed||(!force&&!host.visible(mac.id)))return;macFlight=(async()=>{try{metrics=await request('mac-metrics');macError='';}catch{macError='연결 지연 · 마지막 측정값';}finally{renderMac();macFlight=null;}})();return macFlight;}
+ async function loadMac(force=false){if(macFlight)return macFlight;if(!token||disposed||(!force&&!host.visible(mac.id)))return;macFlight=(async()=>{try{metrics=await request('devices');macError='';}catch{macError='연결 지연 · 마지막 측정값';}finally{renderMac();macFlight=null;}})();return macFlight;}
  async function loadStock(force=false){if(stockFlight)return stockFlight;if(!token||disposed||(!force&&!host.visible(stock.id)))return;stockFlight=(async()=>{try{trading=await request('stock101-widget');stockError='';}catch{stockError='상태 연결 지연 · 제어 잠김';}finally{renderStock();stockFlight=null;}})();return stockFlight;}
  function newDialog(title){dialog?.remove();dialog=make('dialog','wu-sheet dw-dialog');const h=make('header','wu-sheet-head');h.append(make('h2','',title),button('닫기',()=>dialog.close()));dialog.append(h);const opened=dialog;dialog.addEventListener('close',()=>opened.remove(),{once:true});document.body.append(dialog);dialog.showModal();return dialog;}
  function liveConfirm(){
@@ -75,7 +83,7 @@
   catch(e){toast(reasons[e.message]||e.message);}
   finally{tradeBusy=false;renderStock();}
  }
- host.install(['mac-status','내 Mac','M6·M1 CPU·GPU·RAM과 온도','home','left'],mac.c);
+ host.install(['mac-status','내 기기','등록한 기기와 자동 선택된 AI 메인','home','left'],mac.c);
  host.install(['stock101','Stock101','모의·실제매매 상태와 켜기·끄기','stock101','right'],stock.c);
  renderMac();renderStock();
  const poll=()=>{loadMac();loadStock();};

@@ -18,3 +18,9 @@ AI 대화·업무는 Ollama 설치 및 모델 다운로드가 필요합니다. �
 
 개인·비상업적 사용용 공개 소스입니다. 상업적 사용 조건은 [라이선스](LICENSE.md)를 확인하세요.
 기능 범위와 설치 방법은 [영문 README](README.md)에 정리되어 있습니다.
+
+## 기기 추가 / Multiple computers
+
+한 대로 시작하고 **Settings → 기기 연결 → 기기 추가**에서 필요할 때 연결하세요.
+메인 추론 기기는 모델과 가용 성능을 기준으로 자동 선택됩니다.
+[Device setup, automatic selection and limitations](docs/DEVICES.md)

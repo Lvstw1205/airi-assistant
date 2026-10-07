@@ -4,7 +4,7 @@
 
 A configurable personal AI workspace for local conversations, task planning, memory, research, voice, camera integrations and agent workflows. Includes an isolated Stock101 workspace.
 
-**Community source release · v0.1.0 · Python 3.11+ · Personal and noncommercial use**
+**Community source release · v0.2.0 · Python 3.11+ · Personal and noncommercial use**
 
 ## What it does
 
@@ -13,6 +13,7 @@ A configurable personal AI workspace for local conversations, task planning, mem
 - Role registry and agent workflows for research, writing, coding and review.
 - Research desk, news evidence, document ingestion and PDF report generation.
 - Local voice and camera adapters, face personalization and hand controls.
+- Single-computer setup, paired additional devices and automatic inference-main selection.
 - Telegram command bridge, optional device workers and service connectors.
 - Stock101 research, PAPER simulation and separately gated live adapter code.
 - Neutral public avatar, optional user-supplied VRM and motion integration hooks.
@@ -81,3 +82,9 @@ Required attribution is in [NOTICE](NOTICE).
 [Stock101](https://github.com/Lvstw1205/stock101) ·
 [AIRI Playbook](https://github.com/Lvstw1205/airi-playbook) ·
 [Tim Works Beta](https://github.com/Lvstw1205/tim-works-beta)
+
+## 기기 추가 / Multiple computers
+
+한 대로 시작하고 **Settings → 기기 연결 → 기기 추가**에서 필요할 때 연결하세요.
+메인 추론 기기는 모델과 가용 성능을 기준으로 자동 선택됩니다.
+[Device setup, automatic selection and limitations](docs/DEVICES.md)

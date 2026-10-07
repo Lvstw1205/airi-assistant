@@ -1,6 +1,6 @@
 # Release validation — 2026-10-07
 
-- Python unit tests: **421 passed, 3 skipped** (424 total).
+- Python unit tests: **433 passed, 3 skipped** (436 total).
 - All distributed Python and JavaScript source files passed syntax checks.
 - Source export checked for original owner paths, account identifiers, private endpoints and credential patterns.
 - Fresh local UI and authenticated state endpoints checked in a separate data directory.
@@ -12,3 +12,5 @@ Tests use synthetic portfolios and isolated files. They do not measure future pr
 general biometric accuracy, long-duration uptime or all third-party service combinations.
 Optional integrations require the new user's own configuration. Run the unit suite with
 `python -m unittest discover -s tests -q` from this repository.
+
+Device tests include actual loopback TLS transport and signed requests. See DEVICES.md.

@@ -1,5 +1,6 @@
 """OpenAI-compatible inference that preserves the selected model and provider."""
 import freellm_provider
+import devices
 import json, threading, time, urllib.request, urllib.error, os, sqlite3
 from urllib.parse import urlsplit
 from pathlib import Path
@@ -59,10 +60,13 @@ def prepare_body(endpoint, body):
         body['reasoning_effort'] = 'none'
     return body
 
-def open_url(url,body=None,timeout=5,headers=None):
+def open_url(url,body=None,timeout=5,headers=None,endpoint=None):
+    if endpoint and endpoint.get('device'):
+        return devices.open_endpoint(endpoint,url,body,timeout)
     request=urllib.request.Request(url,data=None if body is None else json.dumps(body).encode(),headers={'Content-Type':'application/json',**(headers or {})})
     return urllib.request.build_opener(urllib.request.ProxyHandler({}),NoRedirect()).open(request,timeout=timeout)
 def models(endpoint):
+    if 'installed_models' in endpoint:return endpoint['installed_models']
     base=endpoint['base_url'].rstrip('/')
     with _lock:cached=_health.get(base)
     if cached and time.monotonic()-cached[0]<30:return cached[1]
@@ -88,7 +92,7 @@ def endpoints_for(selected_model):
         cloud=registered_openai(selected_model)
         if not cloud:raise ValueError('선택한 OpenAI API 연결을 찾지 못했습니다. 답변 품질을 유지하려고 로컬 모델로 자동 전환하지 않았습니다. 설치·연결을 확인하거나 사용할 로컬 모델을 직접 선택하세요.')
         return [cloud]
-    return [cfg['primary'],cfg['fallback']]
+    return devices.routed_endpoints(cfg,selected_model)
 
 def model_for(endpoint,selected_model):
     if endpoint.get('provider') == 'FreeLLMAPI' or endpoint.get('key'):return endpoint['model']
@@ -115,8 +119,9 @@ def stream(messages,selected_model,max_tokens=512,temperature=.4):
         try:
             prepare_body(endpoint, body)
             kwargs={'headers':request_headers(endpoint)}
+            if endpoint.get('device'):kwargs['endpoint']=endpoint
             with open_url(endpoint['base_url'].rstrip('/')+'/chat/completions',body,endpoint.get('response_timeout',120),**kwargs) as response:
-                yield {'type':'backend','model':model,'fallback':bool(index) or bool(reason),'reason':reason,'provider':provider_name(endpoint),'tool_id':endpoint.get('tool_id'),'failed_tool_id':cloud.get('tool_id') if cloud and index and reason else None}
+                yield {'type':'backend','model':model,'fallback':bool(index) or bool(reason),'reason':reason,'provider':provider_name(endpoint),'device_name':endpoint.get('device_name'),'device_id':endpoint.get('device_id'),'tool_id':endpoint.get('tool_id'),'failed_tool_id':cloud.get('tool_id') if cloud and index and reason else None}
                 for raw in response:
                     if not raw.startswith(b'data:'):continue
                     payload=raw[5:].strip()
@@ -131,6 +136,7 @@ def stream(messages,selected_model,max_tokens=512,temperature=.4):
             if not finished or not produced:raise ValueError('모델 응답이 완료되지 않았습니다.')
             return
         except Exception as e:
+            devices.failed(endpoint)
             last=e;reason=freellm_provider.error_reason(e) if endpoint.get('provider') == 'FreeLLMAPI' else error_reason(e)
             if isinstance(e,urllib.error.URLError) and not isinstance(e,urllib.error.HTTPError):
                 with _lock:_health[endpoint['base_url'].rstrip('/')]=(time.monotonic(),[])
@@ -153,8 +159,8 @@ def tool_stream(messages,selected_model,tools,max_tokens=700):
         prepare_body(endpoint, body)
         produced=False;finished=False;finish_reason=None;content=[];calls={}
         try:
-            with open_url(endpoint['base_url'].rstrip('/')+'/chat/completions',body,endpoint.get('response_timeout',90),headers) as response:
-                yield {'type':'backend','provider':provider_name(endpoint),'model':model,'tool_id':endpoint.get('tool_id'),'fallback':bool(index),'reason':''}
+            with open_url(endpoint['base_url'].rstrip('/')+'/chat/completions',body,endpoint.get('response_timeout',90),headers,**({'endpoint':endpoint} if endpoint.get('device') else {})) as response:
+                yield {'type':'backend','provider':provider_name(endpoint),'model':model,'device_name':endpoint.get('device_name'),'device_id':endpoint.get('device_id'),'tool_id':endpoint.get('tool_id'),'fallback':bool(index),'reason':''}
                 for raw in response:
                     if not raw.startswith(b'data:'):continue
                     payload=raw[5:].strip()
@@ -183,6 +189,7 @@ def tool_stream(messages,selected_model,tools,max_tokens=700):
             elif answer['content']:yield {'type':'token','text':answer['content']}
             yield {'type':'message','message':answer};return
         except Exception as e:
+            devices.failed(endpoint)
             last=e
             if produced:raise ValueError('응답이 중단됐습니다. 중복 실행을 피하려고 자동 재시작하지 않았습니다.') from e
     raise unavailable(selected_model,last) from last
@@ -198,13 +205,15 @@ def tool_turn(messages,selected_model,tools,max_tokens=700):
         body={'model':model,'messages':messages,'tools':tools,'tool_choice':'auto','stream':False,'max_tokens':max_tokens,'temperature':.25}
         prepare_body(endpoint, body)
         try:
-            with open_url(endpoint['base_url'].rstrip('/')+'/chat/completions',body,endpoint.get('response_timeout',90),headers) as r:result=json.load(r)
+            with open_url(endpoint['base_url'].rstrip('/')+'/chat/completions',body,endpoint.get('response_timeout',90),headers,**({'endpoint':endpoint} if endpoint.get('device') else {})) as r:result=json.load(r)
             choice=result['choices'][0]
             if choice.get('finish_reason')=='length':raise ValueError('도구 응답 길이가 제한을 초과했습니다. 질문 범위를 줄여주세요.')
             answer=choice['message']
             answer={k:v for k,v in answer.items() if k in ('role','content','tool_calls')}
             return answer,{'provider':provider_name(endpoint),'model':model,'tool_id':endpoint.get('tool_id'),'fallback':bool(index),'reason':''}
-        except Exception as e:last=e
+        except Exception as e:
+            devices.failed(endpoint)
+            last=e
     raise unavailable(selected_model,last) from last
 
 
