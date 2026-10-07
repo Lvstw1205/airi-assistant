@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-10-07
+
+Add a real UI screenshot, architecture diagram and API/MCP code walkthrough. Explain the sanitized public import. Format and annotate the agent runtime without changing its runtime AST; add approval-boundary regression coverage.
+
 ## 0.2.0 — 2026-10-07
 
 Single-computer defaults with optional paired workers, a device-add form and automatic

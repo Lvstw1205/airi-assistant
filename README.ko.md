@@ -24,3 +24,10 @@ AI 대화·업무는 Ollama 설치 및 모델 다운로드가 필요합니다. �
 한 대로 시작하고 **Settings → 기기 연결 → 기기 추가**에서 필요할 때 연결하세요.
 메인 추론 기기는 모델과 가용 성능을 기준으로 자동 선택됩니다.
 [Device setup, automatic selection and limitations](docs/DEVICES.md)
+
+
+## 화면과 구조 살펴보기
+
+[영문 README의 실제 화면](README.md)과 [구조·코드 안내](docs/ARCHITECTURE.md)를 참고하세요.
+공개 이전에 로컬에서 개발한 프로젝트를 2026년 10월 7일 개인정보를 제거한 상태로 옮겼습니다.
+공개 첫 커밋 날짜가 전체 개발 기간을 뜻하지 않습니다. 이후 개선은 실제 변경 단위로 기록합니다.
